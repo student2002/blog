@@ -1,0 +1,111 @@
+
+
+/*每个页面公共css */
+.hide{
+    display: none;
+}
+.show{
+    display: block;
+}
+.flex{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    
+    
+}
+.flex_equally{
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    
+}
+/* 居中 */ 
+.center{
+    -webkit-box-pack: center;
+       -ms-flex-pack: center;
+     justify-content: center;
+   -webkit-box-align: center;
+      -ms-flex-align: center;
+         align-items: center;
+}
+/* 拉手分布*/ 
+.around{
+    -ms-flex-pack:distribute;
+    justify-content:space-around
+}
+/* 靠左 */ 
+.left_elastic{
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;justify-content: flex-start;
+}
+/* 靠右 */ 
+.right_elastic{
+    -webkit-box-pack:end;
+    -ms-flex-pack:end;
+    justify-content:flex-end;
+    
+}
+/* 换行 */ 
+.wrap{
+    -ms-flex-wrap:wrap;
+        flex-wrap:wrap
+}
+/* 对称 */ 
+.start{
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+/* 不换行 */ 
+.no_wrap{
+    -ms-flex-wrap:no-wrap;
+     flex-wrap:no-wrap
+}
+/* 竖向 */ 
+.column{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+       -ms-flex-direction: column;
+           flex-direction: column;
+}
+/* 横向 */
+.transverse{
+-webkit-box-orient: horizontal;
+-webkit-box-direction: normal;
+    -ms-flex-direction: row;
+        flex-direction: row;
+}
+/* 怪异盒子 */
+.adapt_box {
+-webkit-box-sizing: border-box;
+        box-sizing: border-box;
+}
+
+.texthide{
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+}
+.height100{
+    height: 100%;
+}
+
+ul{
+    list-style-type: none;
+}
+li{
+    list-style: none;
+}
+html,body,ul,li,h5,h4,h1{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    width:100%;
+    overflow-x: hidden;
+}
