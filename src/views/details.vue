@@ -1,43 +1,32 @@
 <template>
 	<div class="inner-box">
 		<div class="maxWidthView inner ">
-			<div class="article-item">
+			<div class="article-item" v-if="article">
 				<aside class="title">
-					<h4>WEB学习路线推荐</h4>
+					<h4>{{ article.title }}</h4>
 					<p>
-						<small class="small">作者: <span>小刘</span> </small>
-						<small class="small">更新于: 2023-01-25 11:20:00</small>
+						<small class="small">作者: <span>{{ article.author }}</span> </small>
+						<small class="small">更新于: {{ article.date }}</small>
 					</p>
 				</aside>
 				<div class="time hidden-xs-only">
-					<span class="day">25</span>
-					<span class="month">1月</span>
-					<span class="year ">2023</span>
+					<span class="day">{{ article.day }}</span>
+					<span class="month">{{ article.month }}</span>
+					<span class="year ">{{ article.year }}</span>
 				</div>
 				<div class="artiledetail">
-					这篇文章是为了介绍自己自学用过的WEB视频资料。本套整合教程总共180+G，共450+小时。考虑到绝大部分视频至少要看两遍，
-					而且视频总时长并不代表学习时长，所以零基础初学者总学习时间大约为：600小时视频时长 + 100小时理解 + 100小时练习，至少需要800小时。
-					你可能觉得自己能一天学习8小时，实际上平均下来每天能学4小时都算厉害了。总会有各种原因，比如当天内容太难，公司聚会，要出差等等。
-					如果周末你也是坚持学习，那么最理想状况下，6个半月就可以学完，达到工作后能被人带的水平。但我知道那其实基本不可能。我自己从完全零基础，
-					到学C语言，到学Java，除去中间断开的两个月，已经学习10个月。当然，这和我边工作边学习，以及没有人帮我找资料有很大关系。
-					很多时间花在找资料上了。如果你已经经历过JS的洗礼，会明白，我这篇回答对现在迷茫的你份量有多重，JS阶段，建议完全零基础的朋友，
-					直接看刘意老师的，辅助看毕老师的。当然，也可以都试看一下再决定，每个人喜好不同。放心，完全零基础的朋友，一遍肯定学不会。
-					所以同一套视频看两遍都算少了。另外，有时一个老师的观点是片面的，
-					要结合不同老师的讲解才可能对一个知识点有更全面深刻的理解（前提是先把一个老师的讲解吃透）。
-					所以我是建议刘意和毕向东的都至少看两遍。
+					<div v-html="renderedContent"></div>
 					<div class="copyright ">
-						<p class="f-toe">非特殊说明，本文版权归 ZQ个人博客 所有，转载请注明出处.</p>
-						<p class="f-toe">本文标题：Java学习路线推荐</p>
-						<p class="f-toe">本文网址：枕风</p>
+						<p class="f-toe">非特殊说明，本文版权归 muffin个人博客 所有，转载请注明出处.</p>
+						<p class="f-toe">本文标题：{{ article.title }}</p>
+						<p class="f-toe">本文网址：muffin</p>
 					</div>
 				</div>
-				<fieldset class="field-title">
-					<legend>发表评论</legend>
-					<div class="textarea">
-						<el-input v-model="textarea" :rows="2" type="textarea" placeholder="请输入" />
-					</div>
-					<el-button type="primary">提交留言</el-button>
-				</fieldset>
+			</div>
+			<div v-else class="article-not-found">
+				<h3>文章未找到</h3>
+				<p>抱歉，您访问的文章不存在或已被删除。</p>
+				<el-button type="primary" @click="goBack">返回博客列表</el-button>
 			</div>
 		</div>
 	</div>
@@ -45,8 +34,87 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const textarea = ref('');
+import { ref, onMounted, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { getArticleById } from '@/data/articles.js'
+import MarkdownIt from 'markdown-it'
+
+// 初始化markdown-it
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true
+})
+
+const route = useRoute()
+const router = useRouter()
+const article = ref(null)
+
+// 计算属性获取文章ID
+const currentArticleId = computed(() => {
+  // 尝试从查询参数获取ID
+  const id = route.query.id
+  console.log('从查询参数获取ID:', id)
+  return id
+})
+
+// 计算属性，将Markdown内容转换为HTML
+const renderedContent = computed(() => {
+  if (!article.value || !article.value.content) {
+    return ''
+  }
+  
+  // 如果内容已经是HTML格式（包含HTML标签），则直接返回
+  if (/<[^>]+>/.test(article.value.content)) {
+    return article.value.content
+  }
+  
+  // 否则将Markdown转换为HTML
+  return md.render(article.value.content)
+})
+
+// 加载文章数据
+const loadArticle = () => {
+  try {
+    const id = currentArticleId.value
+    console.log('准备加载文章，ID:', id)
+    
+    if (!id) {
+      console.error('文章ID为空')
+      article.value = null
+      return
+    }
+    
+    // 直接调用getArticleById，不需要再次转换为数字类型
+    // 因为articles.js中的getArticleById函数已经处理了类型转换
+    const articleData = getArticleById(id)
+    console.log('获取到的文章数据:', articleData)
+    
+    article.value = articleData
+  } catch (error) {
+    console.error('加载文章失败:', error)
+    article.value = null
+  }
+}
+
+// 返回博客列表
+const goBack = () => {
+  router.push('/BlogList')
+}
+
+// 监听路由参数变化，重新加载文章
+watch(() => route.query.id, () => {
+  console.log('路由参数变化，重新加载文章')
+  loadArticle()
+}, { immediate: true })
+
+// 组件挂载后延迟加载，确保路由参数已经解析完成
+onMounted(() => {
+  setTimeout(() => {
+    console.log('onMounted后延迟加载文章')
+    loadArticle()
+  }, 100)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -57,26 +125,112 @@ const textarea = ref('');
 
 .inner {
 	.article-item {
-		.field-title {
-			.textarea{
-				margin: 10px 0;
-			}
-			legend {
-				margin-left: 20px;
-				padding: 0 10px;
-				font-size: 20px;
-				font-weight: 300;
-			}
-
-			margin: 10px 0 20px;
-			border-width: 1px 0 0;
-			padding: 0;
-			border-style: solid;
-			border-color: #e6e6e6;
-		}
-
 		.artiledetail {
-
+			// Markdown内容样式
+			:deep(h1) {
+				font-size: 24px;
+				font-weight: bold;
+				margin: 20px 0 15px 0;
+				padding-bottom: 10px;
+				border-bottom: 1px solid #eee;
+			}
+			
+			:deep(h2) {
+				font-size: 22px;
+				font-weight: bold;
+				margin: 18px 0 12px 0;
+				padding-bottom: 8px;
+				border-bottom: 1px solid #eee;
+			}
+			
+			:deep(h3) {
+				font-size: 20px;
+				font-weight: bold;
+				margin: 15px 0 10px 0;
+			}
+			
+			:deep(h4) {
+				font-size: 18px;
+				font-weight: bold;
+				margin: 12px 0 8px 0;
+			}
+			
+			:deep(p) {
+				margin: 10px 0;
+				line-height: 1.6;
+			}
+			
+			:deep(ul), :deep(ol) {
+				margin: 10px 0;
+				padding-left: 30px;
+			}
+			
+			:deep(li) {
+				margin: 5px 0;
+			}
+			
+			:deep(blockquote) {
+				margin: 15px 0;
+				padding: 10px 20px;
+				border-left: 4px solid #ddd;
+				background-color: #f9f9f9;
+				color: #666;
+			}
+			
+			:deep(code) {
+				padding: 2px 4px;
+				background-color: #f5f5f5;
+				border-radius: 3px;
+				font-family: Consolas, Monaco, 'Andale Mono', monospace;
+				color: #e83e8c;
+			}
+			
+			:deep(pre) {
+				margin: 15px 0;
+				padding: 15px;
+				background-color: #f5f5f5;
+				border-radius: 5px;
+				overflow-x: auto;
+				
+				code {
+					padding: 0;
+					background-color: transparent;
+					color: inherit;
+				}
+			}
+			
+			:deep(table) {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 15px 0;
+			}
+			
+			:deep(th), :deep(td) {
+				padding: 8px 12px;
+				border: 1px solid #ddd;
+				text-align: left;
+			}
+			
+			:deep(th) {
+				background-color: #f5f5f5;
+				font-weight: bold;
+			}
+			
+			:deep(a) {
+				color: #1890ff;
+				text-decoration: none;
+				
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+			
+			:deep(img) {
+				max-width: 100%;
+				height: auto;
+				margin: 10px 0;
+				border-radius: 4px;
+			}
 
 			.copyright {
 				.f-toe {

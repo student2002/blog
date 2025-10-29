@@ -1,26 +1,50 @@
 <template>
   <div class="bg-box flex center container" :style="{ height: getViewHeight + 'px' }">
-    <div class="callout-title">
-      <h1>枕风-Blog</h1>
-      <p>只要朝着一个方向努力，一切都会变得得心应手</p>
-      <el-button type="primary" @click="menuEvent('/BlogList')">Enter Blog</el-button>
+    <!-- 视频背景层 -->
+    <video class="bg-video" autoplay muted loop>
+      <source :src="bgVideoSource" type="video/mp4">
+    </video>
+    
+    <!-- 内容层 -->
+    <div class="content-overlay">
+      <div class="callout-title">
+        <h1>muffin-Blog</h1>
+        <p>只要朝着一个方向努力，一切都会变得得心应手</p>
+      </div>
+      <div class="countdown-container">
+        <h2 class="countdown-title">距离2026年还有</h2>
+        <div class="countdown">
+          <div class="countdown-item">
+            <div class="countdown-number">{{ countdownDays }}</div>
+            <div class="countdown-label">天</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-number">{{ countdownHours }}</div>
+            <div class="countdown-label">时</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-number">{{ countdownMinutes }}</div>
+            <div class="countdown-label">分</div>
+          </div>
+          <div class="countdown-item">
+            <div class="countdown-number">{{ countdownSeconds }}</div>
+            <div class="countdown-label">秒</div>
+          </div>
+        </div>
+      </div>
+      <el-icon class="ArrowDownBold">
+        <ArrowDownBold @click="ArrowDownBoldEvent" />
+      </el-icon>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
+      <span class="meteor"></span>
     </div>
-    <el-icon class="ArrowDownBold">
-      <ArrowDownBold @click="ArrowDownBoldEvent" />
-    </el-icon>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
-    <span class="meteor"></span>
   </div>
   <div class="hover_animation menu_open" :class="{ menu_close: mark }" @click="mark = !mark">
     <span :style="{ marginTop: mark ? '18px' : '' }"></span>
@@ -29,10 +53,9 @@
   </div>
   <div class="navgation" :class="[mark ? 'navgation_open' : 'navgation_close']" @touchmove.prevent>
     <div class="menu-list" v-show="mark">
-      <div class="index">作者<i></i></div>
-      <div class="index" @click="menuEvent('/BlogList')">博客<i></i></div>
-      <div class="index" @click="menuEvent('/LeaveOneMsg?index=2')">留言<i></i></div>
-    </div>
+        <div class="index">作者<i></i></div>
+        <div class="index" @click="menuEvent('/BlogList')">博客<i></i></div>
+      </div>
   </div>
 
   <div style="background-color: #f5f5f5">
@@ -47,21 +70,20 @@
       </div>
       <div class="classification-box adapt_box">
         <el-row :gutter="20">
-          <!-- <el-col :xs="24" :sm="24 / 3" :md="24 / 3" :lg="24 / 3" :xl="24 / 3" v-for="i in 3" :key="i">
+          <el-col :xs="24" :sm="24 / 3" :md="24 / 3" :lg="24 / 3" :xl="24 / 3" v-for="(category, index) in categories" :key="index">
             <div class="fadeInUp">
-              <img src="https://img2.baidu.com/it/u=1361506290,4036378790&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500"
+              <img :src="getCategoryImage(category.name)"
                 alt="" style="width: 100%" />
               <div class="news-content">
-                <h4>Vue专栏</h4>
-                <div class="date">2023年1月20日</div>
+                <h4>{{ category.name }}专栏</h4>
+                <div class="date">{{ category.date }}</div>
                 <p>
-                  本专栏主要分享vue的各种常见问题，包括vue学习路线，vue基础，
-                  模块化，整体项目结构优化方案，项目，面试题，希望通过这些知识的分享能够提升自己的vue水平
+                  {{ category.description }}
                 </p>
                 <span class="see" @click="menuEvent('/BlogList')">更多阅读</span>
               </div>
             </div>
-          </el-col> -->
+          </el-col>
         </el-row>
       </div>
     </div>
@@ -96,24 +118,101 @@
       <div class="title fadeInLeft" :style="{
         'visibility': page3AnimationType ? 'visible' : 'hidden',
         'animationName': page3AnimationType ? 'fadeInLeft' : 'none',
-      }" :class="{ 'animated': page3AnimationType }">枕风个人博客</div>
+      }" :class="{ 'animated': page3AnimationType }">muffin个人博客</div>
       <div class="Subtitle fadeInRight" :style="{
         'visibility': page3AnimationType ? 'visible' : 'hidden',
         'animationName': page3AnimationType ? 'fadeInRight' : 'none',
-      }" :class="{ 'animated': page3AnimationType }">一天很短，开心了就笑，不开心了就过会儿再笑。</div>
+      }" :class="{ 'animated': page3AnimationType }">一天很短，开心了就笑，不开心了就过一会儿再笑。</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import common from '@/utils/common'
 import router from '@/Composition/router'
+
+// 导入资源
+const homeBannerImage = require('../assets/images/home-banner.jpg');
+// 生活专栏背景图片
+const lifeImage = require('../assets/images/life.png');
+// 技术专栏背景图片
+const codeImage = require('../assets/images/code.png');
+// 杂谈专栏背景图片
+const imagineImage = require('../assets/images/Imagine.jpg');
+// 尝试使用require导入视频文件
+const bgVideoSource = require('@/assets/videos/bj.mp4');
+
 const mark = ref(false);
+
+// 倒计时相关变量
+const countdownDays = ref('00');
+const countdownHours = ref('00');
+const countdownMinutes = ref('00');
+const countdownSeconds = ref('00');
+let countdownInterval = null;
+
+// 分类数据
+const categories = ref([
+  {
+    name: '生活',
+    description: '分享生活中的点点滴滴，记录美好时光，感悟生活真谛。无论是周末的休闲时光，还是日常的所见所闻，都是生活中值得珍藏的片段。',
+    date: '2025年10月'
+  },
+  {
+    name: '技术',
+    description: '分享技术学习心得和经验，包括前端开发、编程技巧、学习路线等内容。帮助读者提升技术水平，解决技术难题。',
+    date: '2025年10月'
+  },
+  {
+    name: '杂谈',
+    description: '分享对未来的思考、人生感悟、社会观察等各种话题。在这里可以畅所欲言，分享内心的想法和观点。',
+    date: '2025年10月'
+  }
+]);
+
+// 计算倒计时
+const calculateCountdown = () => {
+  const now = new Date();
+  const targetDate = new Date('2026-01-01T00:00:00');
+  const difference = targetDate - now;
+
+  if (difference > 0) {
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    countdownDays.value = days.toString().padStart(3, '0');
+    countdownHours.value = hours.toString().padStart(2, '0');
+    countdownMinutes.value = minutes.toString().padStart(2, '0');
+    countdownSeconds.value = seconds.toString().padStart(2, '0');
+  } else {
+    countdownDays.value = '000';
+    countdownHours.value = '00';
+    countdownMinutes.value = '00';
+    countdownSeconds.value = '00';
+  }
+};
 
 const menuEvent = (url) => {
   router.get().push(url)
 };
+
+// 根据分类名称获取对应的背景图片
+const getCategoryImage = (categoryName) => {
+  switch(categoryName) {
+    case '生活':
+      return lifeImage;
+    case '技术':
+      return codeImage;
+    case '杂谈':
+      return imagineImage;
+    default:
+      return homeBannerImage;
+  }
+};
+
 const getViewHeight = common.getViewPortHeight();
 
 let animationTime = null; // 动画计时器
@@ -144,6 +243,19 @@ const ArrowDownBoldEvent = () => {
     }
   });
 };
+
+// 组件挂载时启动倒计时
+onMounted(() => {
+  calculateCountdown();
+  countdownInterval = setInterval(calculateCountdown, 1000);
+});
+
+// 组件卸载时清除倒计时
+onUnmounted(() => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+  }
+});
 
 </script>
 
@@ -235,7 +347,7 @@ const ArrowDownBoldEvent = () => {
   }
 
   // background-image: url(https://images.unsplash.com/photo-1551841462-31a28cf2c601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80);
-  background-image: url(../assets/bj.jpg);
+  background-image: url(../assets/images/home-banner.jpg);
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -292,6 +404,7 @@ const ArrowDownBoldEvent = () => {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
+        line-clamp: 3;
         overflow: hidden;
         line-height: 19px;
         font-size: 12px;
@@ -606,11 +719,173 @@ const ArrowDownBoldEvent = () => {
   display: none;
 }
 
+/* 倒计时样式 */
+.countdown-container {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.countdown-title {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.countdown {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.countdown-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countdown-number {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 36px;
+  font-weight: bold;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.countdown-label {
+  color: #fff;
+  font-size: 16px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .countdown-container {
+    bottom: 100px;
+  }
+  
+  .countdown-title {
+    font-size: 20px;
+  }
+  
+  .countdown {
+    gap: 15px;
+  }
+  
+  .countdown-number {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+  
+  .countdown-label {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdown-container {
+    bottom: 80px;
+  }
+  
+  .countdown-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  .countdown {
+    gap: 10px;
+  }
+  
+  .countdown-number {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+  
+  .countdown-label {
+    font-size: 12px;
+  }
+}
+
+/* 动画效果 */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.countdown-number {
+  animation: pulse 2s infinite;
+}
+
+/* 倒计时容器动画 */
+.countdown-container {
+  animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 .bg-box {
   background-color: #151515;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #ffffff;
   text-align: center;
   position: relative;
+  overflow: hidden;
+}
+
+/* 视频背景样式 */
+.bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 确保视频覆盖整个容器 */
+  z-index: 1; /* 设置为最底层 */
+}
+
+/* 内容覆盖层样式 */
+.content-overlay {
+  position: relative;
+  z-index: 10; /* 确保内容在视频之上 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
 @media screen and (max-width: 768px) {

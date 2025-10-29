@@ -4,5 +4,16 @@ module.exports = defineConfig({
   productionSourceMap:false,
   publicPath: './',
   outputDir: 'dist', 
-  assetsDir: 'static'
+  assetsDir: 'static',
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      title: 'muffin~'
+    }
+  },
+  devServer: {
+    hot: true,
+    proxy: {
+    }
+  }
 })

@@ -26,12 +26,7 @@ const routes = [
 				component: () => import(/* webpackChunkName: "about" */'@/views/details'),
 				meta:{index:3}
 			},
-			{
-				path: '/LeaveOneMsg',
-				name: '/LeaveOneMsg',
-				component: () => import(/* webpackChunkName: "about" */'@/views/LeaveOneMsg'),
-				meta:{index:4}
-			},
+
 		]
 	}
 ]

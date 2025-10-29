@@ -4,7 +4,7 @@
             <el-row :gutter="20">
                 <el-col :xs="24" :sm="24 / 3" :md="24 / 3" :lg="24 / 3" :xl="24 / 3">
                     <div>
-                        <div class="single-widget">枕风个人博客</div>
+                        <div class="single-widget">muffin个人博客</div>
                         <p>世界那么大，我想去看看</p>
                         <el-button type="primary">About Me</el-button>
                     </div>
@@ -38,13 +38,13 @@
                         <div class="flex center left_elastic txt-l">
                             <ChatLineSquare size="22" class="icont" />
                             <div>
-                                <span>QQ: 3249889831</span>
+                                <span>QQ: 3081016708</span>
                             </div>
                         </div>
                         <div class="flex center left_elastic txt-l">
                             <Avatar size="22" class="icont" />
                             <div>
-                                <span>邮箱: 3249889831@qq.com</span>
+                                <span>邮箱: 3081016708@qq.com</span>
                             </div>
                         </div>
                     </div>

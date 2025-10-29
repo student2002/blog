@@ -49,15 +49,7 @@ const menu = [
   {
     name: '博客',
     path: '/BlogList'
-  },
-  {
-    name: '留言',
-    path: '/LeaveOneMsg'
-  },
-  // {
-  //   name:'友链',
-  //   path:'/'
-  // },
+  }
 ]
 if (router.query().index) {
   activeIndex.value = +router.query().index

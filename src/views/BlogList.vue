@@ -6,34 +6,30 @@
         <el-row :gutter="20">
           <el-col :xs="24" :sm="16" :md="16" :lg="17" :xl="17">
             <div class="bloglist">
-              <!-- <div class="article-item zoomIn" v-for="i in 4" :key="i">
+              <div class="article-item zoomIn" v-for="article in articles" :key="article.id">
                 <h5 class="title flex_equally">
-                  <span class="original">【原创】</span>
-                  <span>WEB学习路线推荐</span>
+                  <span class="original">【{{ article.category }}】</span>
+                  <span>{{ article.title }}</span>
                   <div class="time">
-                    <span class="day">24</span>
-                    <span class="month">7月</span>
-                    <span class="year ">2023</span>
+                    <span class="day">{{ article.day }}</span>
+                    <span class="month">{{ article.month }}</span>
+                    <span class="year ">{{ article.year }}</span>
                   </div>
                 </h5>
 
                 <div class="contents">
-                  <img
-                    src="https://img2.baidu.com/it/u=1361506290,4036378790&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500"
-                    alt="">
+                  <img :src="article.image" :alt="article.title">
 
-                  这篇文章是为了介绍自己自学用过的WEB视频资料。本套整合教程总共180+G，共450+小时。考虑到绝大部分视频至少要看两遍，而且视频总时长并不代表学习时长，所以零基础初学者总学习时间大约为：600小时视频时长
-                  + 100小时理解 +
-                  100小时练习，至少需要800小时。你可能觉得自己能一天学习8小时，实际上平均下来每天能学4小时都算厉害了。总会有各种原因，比如当天内容太难，公司聚会，要出差等等。如果周末你也是坚持学习，那么最理想状况下，6个半月就可以学完，达到工作后能被人带的水平。但我知道那其实基本不可能。
+                  {{ article.summary }}
 
                 </div>
                 <div class="read-more">
-                  <span @click="detailsPageEvent">查看详情</span>
+                  <span @click="detailsPageEvent(article.id)">查看详情</span>
                 </div>
-                <div class="fc-flag">
+                <div class="fc-flag" v-if="article.isTop">
                   置顶
                 </div>
-              </div> -->
+              </div>
             </div>
           </el-col>
           <el-col :xs="24" :sm="8" :md="8" :lg="7" :xl="7" class="hidden-xs-only">
@@ -41,19 +37,38 @@
               <div class="inner">
               <div class="search">
                 <div class="search-wrap flex center">
-                  <el-input v-model="input3" placeholder="请输入关键字搜索文章" />
-                  <el-icon class="search-bot" color="#606266">
+                  <el-input v-model="input3" placeholder="请输入关键字搜索文章" @keyup.enter="searchArticles" />
+                  <el-icon class="search-bot" color="#606266" @click="searchArticles">
                     <Search />
                   </el-icon>
                 </div>
               </div>
               <div class="Article-type" >
+                <div class="category-header">
+                  <h4 class="category-title">文章分类</h4>
+                  <p class="category-desc">按类别浏览文章</p>
+                </div>
                 <ul >
                   <li class="slider" :style="{top:topSum+'px'}"></li>
                   <li v-for="(item,index) in ArticleType" :key="index"
-                  @mouseover="selectStyle((index)*40)" @mouseout="outStyle()">
-                    <p>{{item.name}}</p>
-                  </li>
+                    @mouseover="selectStyle(index)" @mouseout="outStyle()" @click="filterByCategory(item.name, index)">
+                      <div class="category-info">
+                        <div class="category-name">
+                          <el-icon class="category-icon" v-if="item.name === '全部文章'"><Document /></el-icon>
+                          <el-icon class="category-icon" v-else-if="item.name === '技术'"><Cpu /></el-icon>
+                          <el-icon class="category-icon" v-else-if="item.name === '生活'"><Coffee /></el-icon>
+                          <el-icon class="category-icon" v-else-if="item.name === '杂谈'"><ChatDotRound /></el-icon>
+                          <p :class="{ active: currentCategoryIndex === index }">{{item.name}}</p>
+                        </div>
+                        <span class="category-count">{{item?.name === '全部文章' ? (allArticles.length || 0) : (getCategoryCount(item?.name || '') || 0)}} 篇</span>
+                      </div>
+                      <div class="category-detail" v-if="currentCategoryIndex === index">
+                        <p v-if="item.name === '全部文章'">查看所有文章</p>
+                        <p v-else-if="item.name === '技术'">技术分享与学习笔记</p>
+                        <p v-else-if="item.name === '生活'">日常生活与感悟</p>
+                        <p v-else-if="item.name === '杂谈'">随想与杂感</p>
+                      </div>
+                    </li>
                 </ul>
               </div>
             </div>
@@ -70,35 +85,112 @@
 
 <script setup>
 import router from '@/Composition/router'
-import { ref, } from "vue";
-const ArticleType = [
-  {
-    name:'全部文章',
-  },
-  // {
-  //   name:'Vue专栏',
-  // },
-  // {
-  //   name:'React专栏',
-  // },
-  // {
-  //   name:'node专栏',
-  // },
-  // {
-  //   name:'业务bug',
-  // },
-  
-]
+import { ref, onMounted, watch } from "vue";
+import { getAllArticles, getCategories } from '@/data/articles.js'
+import { Document, Cpu, Coffee, ChatDotRound } from '@element-plus/icons-vue'
+
+const allArticles = ref([]);
+const articles = ref([]);
+const ArticleType = ref([{ name: '全部文章' }]); // 默认有一个'全部文章'分类
+const currentCategoryIndex = ref(0); // 当前选中的分类索引
 const input3 = ref('');
-const topSum = ref('');
-const selectStyle = (top)=>{
-  topSum.value = top;
+const topSum = ref(0); // 初始化为0，默认选中第一个分类
+
+onMounted(() => {
+  allArticles.value = getAllArticles();
+  articles.value = allArticles.value;
+  // 将分类字符串数组转换为对象数组
+  const categories = getCategories();
+  ArticleType.value = categories.map(name => ({ name }));
+});
+
+// 根据分类筛选文章
+const filterByCategory = (categoryName, index) => {
+  currentCategoryIndex.value = index;
+  updateSliderPosition(index);
+  
+  if (categoryName === '全部文章') {
+    articles.value = allArticles.value;
+  } else {
+    articles.value = allArticles.value.filter(article => article.category === categoryName);
+  }
+  
+  // 如果有搜索关键词，应用搜索过滤
+  if (input3.value.trim()) {
+    applySearchFilter();
+  }
+};
+
+// 搜索文章
+const searchArticles = () => {
+  // 重置分类为"全部文章"
+  currentCategoryIndex.value = 0;
+  updateSliderPosition(0);
+  
+  // 先显示所有文章
+  articles.value = allArticles.value;
+  
+  // 应用搜索过滤
+  applySearchFilter();
+};
+
+// 应用搜索过滤
+const applySearchFilter = () => {
+  const keyword = input3.value.trim();
+  if (!keyword) {
+    // 如果没有关键词，根据当前选中的分类显示文章
+    if (currentCategoryIndex.value === 0) {
+      articles.value = allArticles.value;
+    } else {
+      const categoryName = ArticleType.value[currentCategoryIndex.value].name;
+      articles.value = allArticles.value.filter(article => article.category === categoryName);
+    }
+    return;
+  }
+  
+  // 根据关键词过滤文章
+  articles.value = articles.value.filter(article => 
+    article.title.toLowerCase().includes(keyword.toLowerCase())
+  );
+};
+
+// 监听搜索输入框的变化
+watch(input3, (newValue) => {
+  if (!newValue.trim()) {
+    // 如果搜索框为空，根据当前选中的分类显示文章
+    if (currentCategoryIndex.value === 0) {
+      articles.value = allArticles.value;
+    } else {
+      const categoryName = ArticleType.value[currentCategoryIndex.value].name;
+      articles.value = allArticles.value.filter(article => article.category === categoryName);
+    }
+  }
+});
+
+// 更新滑块位置
+const updateSliderPosition = (index) => {
+  // 计算滑块位置，考虑每个分类项的高度
+  let position = 0;
+  for (let i = 0; i < index; i++) {
+    // 基础高度39px + 如果是当前选中项则加上详情区域的高度
+    position += 39 + (currentCategoryIndex.value === i ? 35 : 0);
+  }
+  topSum.value = position;
+};
+
+// 获取分类下的文章数量
+const getCategoryCount = (categoryName) => {
+  return allArticles.value.filter(article => article.category === categoryName).length;
+};
+
+const selectStyle = (index)=>{
+  updateSliderPosition(index);
 }
 const outStyle = ()=>{
-  topSum.value = '0'
+  updateSliderPosition(currentCategoryIndex.value); // 恢复到当前选中分类的位置
 }
-const detailsPageEvent = ()=>{
-  router.get().push('/details')
+const detailsPageEvent = (id)=>{
+  router.get().push('/details?id=' + id)
 }
 </script>
 
@@ -126,6 +218,25 @@ p {
 
 .inner {
   .Article-type {
+    .category-header {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+      
+      .category-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin: 0 0 5px 0;
+      }
+      
+      .category-desc {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+      }
+    }
+    
     .slider {
       border-right: 6px solid #484947;
       height: 40px;
@@ -144,19 +255,60 @@ p {
     }
 
     li {
-      p {
-        color: #787977;
-        margin: 0 30px;
+      .category-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 0 20px;
         height: 39px;
         border-bottom: 1px solid #f8f9f7;
-        transition: none;
-        text-decoration: none;
+        
+        .category-name {
+          display: flex;
+          align-items: center;
+          
+          .category-icon {
+            margin-right: 8px;
+            color: #787977;
+            font-size: 16px;
+          }
+          
+          p {
+            color: #787977;
+            margin: 0;
+            transition: none;
+            text-decoration: none;
+            
+            &.active {
+              color: #1890ff;
+              font-weight: bold;
+            }
+          }
+        }
+        
+        .category-count {
+          background-color: #f0f0f0;
+          color: #666;
+          font-size: 12px;
+          padding: 2px 8px;
+          border-radius: 10px;
+        }
+      }
+      
+      .category-detail {
+        padding: 8px 20px 12px;
+        border-bottom: 1px solid #f8f9f7;
+        background-color: #f9f9f9;
+        
+        p {
+          font-size: 13px;
+          color: #666;
+          margin: 0;
+          font-style: italic;
+        }
       }
 
       display: block;
-      height: 40px;
-      line-height: 39px;
       position: relative;
       z-index: 1;
     }
@@ -313,3 +465,5 @@ p {
 
 
 </style>
+
+
