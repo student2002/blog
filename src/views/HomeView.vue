@@ -97,7 +97,7 @@
                   <div class="links fadeInLeft " :style="{
                     'visibility': page2AnimationType ? 'visible' : 'hidden',
                     'animationName': page2AnimationType ? 'fadeInLeft' : 'none',
-                  }" :class="{ 'animated': page2AnimationType }">关于</div>
+                  }" :class="{ 'animated': page2AnimationType }" @click="openLink('https://github.com/student2002/blog')">关于</div>
                   <div class="after"></div>
                 </div>
               </el-col>
@@ -197,6 +197,10 @@ const calculateCountdown = () => {
 
 const menuEvent = (url) => {
   router.get().push(url)
+};
+
+const openLink = (url) => {
+  window.open(url, '_blank');
 };
 
 // 根据分类名称获取对应的背景图片

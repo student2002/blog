@@ -1,5 +1,16 @@
 <template>
-	<div class="inner-box">
+	<div class="inner-box" @click="showLove">
+		<div class="container">
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+			<span class="meteor"></span>
+		</div>
 		<div class="maxWidthView inner ">
 			<div class="article-item" v-if="article">
 				<aside class="title">
@@ -115,16 +126,80 @@ onMounted(() => {
     loadArticle()
   }, 100)
 })
+
+// 点击页面显示爱心
+const showLove = (e) => {
+  const x = e.pageX;
+  const y = e.pageY;
+  const text = document.createElement('span');
+  text.classList.add('floating-text'); // 添加CSS类
+  text.style.left = x + 'px';
+  text.style.top = y + 'px';
+  text.style.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+  const texts = ['富强', '民主', '文明', '和谐', '自由', '平等', '公正', '法治', '爱国', '敬业', '诚信', '友善'];
+  text.innerText = texts[Math.floor(Math.random() * texts.length)];
+  document.body.appendChild(text);
+
+  // 动画结束后移除元素
+  text.addEventListener('animationend', () => {
+    document.body.removeChild(text);
+  });
+};
 </script>
 
 <style lang="scss" scoped>
+@import '@/global/meteor.css';
+
 .inner-box {
 	padding: 0 5px;
 	overflow: hidden;
+	background-image: url('~@/assets/images/info.png');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+}
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+// 定义浮动文字的动画
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-150px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+// 浮动文字的样式
+:global(.floating-text) {
+  position: absolute;
+  z-index: 9999;
+  font-size: 20px;
+  animation: float-up 2s ease-out forwards;
+  pointer-events: none; // 确保文字不会干扰其他点击事件
 }
 
 .inner {
+    position: relative;
+    z-index: 2;
 	.article-item {
+		background: rgba(255, 255, 255, 0.8);
+		padding: 20px;
+		border-radius: 10px;
 		.artiledetail {
 			// Markdown内容样式
 			:deep(h1) {
@@ -173,13 +248,13 @@ onMounted(() => {
 				margin: 15px 0;
 				padding: 10px 20px;
 				border-left: 4px solid #ddd;
-				background-color: #f9f9f9;
+				background-color: transparent;
 				color: #666;
 			}
 			
 			:deep(code) {
 				padding: 2px 4px;
-				background-color: #f5f5f5;
+				background-color: transparent;
 				border-radius: 3px;
 				font-family: Consolas, Monaco, 'Andale Mono', monospace;
 				color: #e83e8c;
@@ -188,7 +263,7 @@ onMounted(() => {
 			:deep(pre) {
 				margin: 15px 0;
 				padding: 15px;
-				background-color: #f5f5f5;
+				background-color: transparent;
 				border-radius: 5px;
 				overflow-x: auto;
 				
@@ -284,7 +359,7 @@ onMounted(() => {
 			}
 
 			line-height: 32px;
-			background-color: #fff;
+			background-color: transparent;
 			padding: 0 0 5px 20px;
 			position: absolute;
 			right: 20px;
@@ -317,7 +392,7 @@ onMounted(() => {
 		position: relative;
 	}
 
-	background-color: #ffffff;
+	background-color: transparent;
 	margin: 20px auto 0 auto;
 
 }
