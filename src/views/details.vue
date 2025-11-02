@@ -1,15 +1,7 @@
 <template>
 	<div class="inner-box" @click="showLove">
-		<div class="container">
-			<span class="meteor"></span>
-			<span class="meteor"></span>
-			<span class="meteor"></span>
-			<span class="meteor"></span>
-			<span class="meteor"></span>
-			<span class="meteor"></span>
-			<span class="meteor"></span>
-			<span class="meteor"></span>
-			<span class="meteor"></span>
+		<div class="bubble-container">
+			<div v-for="i in bubbleCount" :key="i" class="bubble" :style="bubbleStyles[i-1]"></div>
 		</div>
 		<div class="maxWidthView inner ">
 			<div class="article-item" v-if="article">
@@ -145,10 +137,34 @@ const showLove = (e) => {
     document.body.removeChild(text);
   });
 };
+
+const bubbleCount = ref(30);
+const bubbleStyles = ref([]);
+
+onMounted(() => {
+	for (let i = 0; i < bubbleCount.value; i++) {
+		bubbleStyles.value.push(generateBubbleStyle());
+	}
+});
+
+const generateBubbleStyle = () => {
+	const size = Math.random() * 40 + 10; // 10px - 50px
+	const duration = Math.random() * 6 + 2; // 2s - 8s
+	const delay = Math.random() * 5; // 0s - 5s
+	const x = Math.random() * 100; // 0% - 100%
+
+	return {
+		width: `${size}px`,
+		height: `${size}px`,
+		left: `${x}%`,
+		animationDuration: `${duration}s`,
+		animationDelay: `${delay}s`,
+	};
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/global/meteor.css';
+@import '@/global/bubbles.css';
 
 .inner-box {
 	padding: 0 5px;
