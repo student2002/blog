@@ -141,7 +141,7 @@ const codeImage = require('../assets/images/code.png');
 // 杂谈专栏背景图片
 const imagineImage = require('../assets/images/Imagine.jpg');
 // 尝试使用require导入视频文件
-const bgVideoSource = require('@/assets/videos/bj.mp4');
+const bgVideoSource = require('@/assets/videos/bj.webm');
 
 const mark = ref(false);
 
