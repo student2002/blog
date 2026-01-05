@@ -18,7 +18,7 @@
         <p>只要朝着一个方向努力，一切都会变得得心应手</p>
       </div>
       <div class="countdown-container">
-        <h2 class="countdown-title">距离2026年还有</h2>
+        <h2 class="countdown-title">距离{{ nextYear }}年还有</h2>
         <div class="countdown">
           <div class="countdown-item">
             <div class="countdown-number">{{ countdownDays }}</div>
@@ -142,6 +142,10 @@ const bgVideoSource = require('@/assets/videos/bj.webm');
 
 const mark = ref(false);
 
+// 计算下一年
+const nowDate = new Date();
+const nextYear = ref(nowDate.getFullYear() + 1);
+
 // 倒计时相关变量
 const countdownDays = ref('00');
 const countdownHours = ref('00');
@@ -171,7 +175,7 @@ const categories = ref([
 // 计算倒计时
 const calculateCountdown = () => {
   const now = new Date();
-  const targetDate = new Date('2026-01-01T00:00:00');
+  const targetDate = new Date(`${nextYear.value}-01-01T00:00:00`);
   const difference = targetDate - now;
 
   if (difference > 0) {
