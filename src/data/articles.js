@@ -1,10 +1,5 @@
 // 文章数据管理
 
-// 导入所有文章文件
-import code2025 from './技术/code2025-10-30.json';
-import happyWeekend from './生活/life2025-10-30.json';
-import thinkingAboutFuture from './杂谈/imagine2025-10-30.json';
-
 // 使用require.context动态导入所有图片
 const importAll = (r) => {
   let images = {};
@@ -16,6 +11,10 @@ const importAll = (r) => {
 
 // 导入assets/images目录下的所有图片
 const images = importAll(require.context('@/assets/images/', false, /\.(png|jpe?g|svg)$/));
+
+// 使用require.context动态导入data目录下所有子目录中的JSON文件
+// 只需在 技术/生活/杂谈 目录下添加json文件，即可自动生成博客页面
+const articleContext = require.context('./', true, /\.json$/);
 
 // 处理文章数据中的图片路径
 const processArticleImages = (article) => {
@@ -39,12 +38,18 @@ const processArticleImages = (article) => {
   return article;
 };
 
-// 组合所有文章
-const articles = [
-  processArticleImages(code2025),
-  processArticleImages(happyWeekend),
-  processArticleImages(thinkingAboutFuture)
-];
+// 自动扫描所有子目录下的JSON文件并组装文章列表
+const articles = articleContext.keys()
+  .map(key => {
+    const article = articleContext(key);
+    // 如果JSON模块有default属性（某些webpack配置下），取default
+    const data = article.default || article;
+    return processArticleImages(data);
+  })
+  .sort((a, b) => {
+    // 按id排序
+    return (a.id || 0) - (b.id || 0);
+  });
 
 // 获取所有文章
 export function getAllArticles() {
