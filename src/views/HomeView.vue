@@ -24,14 +24,17 @@
             <div class="countdown-number">{{ countdownDays }}</div>
             <div class="countdown-label">天</div>
           </div>
+          <div class="countdown-separator">:</div>
           <div class="countdown-item">
             <div class="countdown-number">{{ countdownHours }}</div>
             <div class="countdown-label">时</div>
           </div>
+          <div class="countdown-separator">:</div>
           <div class="countdown-item">
             <div class="countdown-number">{{ countdownMinutes }}</div>
             <div class="countdown-label">分</div>
           </div>
+          <div class="countdown-separator">:</div>
           <div class="countdown-item">
             <div class="countdown-number">{{ countdownSeconds }}</div>
             <div class="countdown-label">秒</div>
@@ -66,18 +69,33 @@
         <p class="Subtitle">只要朝着一个方向努力一切都会变得得心应手</p>
       </div>
       <div class="classification-box adapt_box">
-        <el-row :gutter="20">
+        <el-row :gutter="24">
           <el-col :xs="24" :sm="24 / 3" :md="24 / 3" :lg="24 / 3" :xl="24 / 3" v-for="(category, index) in categories" :key="index">
-            <div class="fadeInUp">
-              <img :src="getCategoryImage(category.name)"
-                alt="" style="width: 100%" />
-              <div class="news-content">
-                <h4>{{ category.name }}专栏</h4>
-                <div class="date">{{ category.date }}</div>
-                <p>
+            <div class="category-card fadeInUp" @click="goToCategory(category.name)">
+              <div class="card-image-wrapper">
+                <img :src="getCategoryImage(category.name)" :alt="category.name" />
+                <div class="card-overlay"></div>
+                <div class="card-icon">
+                  <el-icon v-if="category.name === '生活'"><Coffee /></el-icon>
+                  <el-icon v-else-if="category.name === '技术'"><Cpu /></el-icon>
+                  <el-icon v-else-if="category.name === '杂谈'"><ChatDotRound /></el-icon>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="card-header">
+                  <h4 class="card-title">{{ category.name }}专栏</h4>
+                  <span class="card-date">{{ category.date }}</span>
+                </div>
+                <p class="card-description">
                   {{ category.description }}
                 </p>
-                <span class="see" @click="menuEvent('/BlogList')">更多阅读</span>
+                <div class="card-footer">
+                  <span class="card-count">{{ getCategoryArticleCount(category.name) }} 篇文章</span>
+                  <span class="see">
+                    <span>更多阅读</span>
+                    <el-icon><ArrowRight /></el-icon>
+                  </span>
+                </div>
               </div>
             </div>
           </el-col>
@@ -128,6 +146,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import common from '@/utils/common'
 import router from '@/Composition/router'
+import { Coffee, Cpu, ChatDotRound, ArrowRight } from '@element-plus/icons-vue'
+import { getAllArticles } from '@/data/articles.js'
 
 // 导入资源
 const homeBannerImage = require('../assets/images/home-banner.jpg');
@@ -216,6 +236,17 @@ const getCategoryImage = (categoryName) => {
     default:
       return homeBannerImage;
   }
+};
+
+// 获取分类下的文章数量
+const getCategoryArticleCount = (categoryName) => {
+  const articles = getAllArticles();
+  return articles.filter(article => article.category === categoryName).length;
+};
+
+// 跳转到分类页面
+const goToCategory = (categoryName) => {
+  router.get().push('/BlogList?category=' + encodeURIComponent(categoryName));
 };
 
 const getViewHeight = common.getViewPortHeight();
@@ -641,70 +672,184 @@ onUnmounted(() => {
 }
 
 .classification {
-
-
   .fadeInDown {
     -webkit-animation-name: fadeInDown;
     animation-name: fadeInDown;
   }
 
-
   .classification-box {
-    .fadeInUp {
+    .category-card {
+      background-color: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+
       &:hover {
-        img {
-          transform: scale(1.2);
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(102, 126, 234, 0.15), 0 8px 24px rgba(0, 0, 0, 0.08);
+
+        .card-image-wrapper {
+          img {
+            transform: scale(1.08);
+          }
+        }
+
+        .card-overlay {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);
+        }
+
+        .card-icon {
+          transform: translate(-50%, -50%) scale(1.15);
+          background: rgba(255, 255, 255, 0.95);
+          box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .see {
+          color: #667eea;
+          el-icon {
+            transform: translateX(4px);
+          }
         }
       }
 
-      img {
-        transition: all 0.4s ease;
-        height: 244px;
+      .card-image-wrapper {
+        position: relative;
+        height: 200px;
         overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+          transition: all 0.5s ease;
+        }
+
+        .card-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 64px;
+          height: 64px;
+          background: rgba(255, 255, 255, 0.92);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 2;
+          
+          .el-icon {
+            font-size: 28px;
+            color: #667eea;
+          }
+        }
       }
 
-      background-color: #ffffff;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
+      .card-content {
+        padding: 24px;
+        position: relative;
 
-    .news-content {
-      .see {
-        margin-top: 15px;
-        padding: 0;
-        background: 0 0;
-        border: none;
-        color: #1890ff;
-        font-size: 14px;
-        cursor: pointer;
+        .card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+
+          .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+            position: relative;
+            
+            &::after {
+              content: '';
+              position: absolute;
+              bottom: -4px;
+              left: 0;
+              width: 32px;
+              height: 3px;
+              background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+              border-radius: 2px;
+            }
+          }
+
+          .card-date {
+            font-size: 13px;
+            color: #999;
+            background: #f8f9fa;
+            padding: 4px 12px;
+            border-radius: 20px;
+          }
+        }
+
+        .card-description {
+          color: #666;
+          font-size: 14px;
+          line-height: 1.8;
+          height: 50px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          margin-bottom: 16px;
+        }
+
+        .card-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 16px;
+          border-top: 1px solid #f5f5f5;
+
+          .card-count {
+            font-size: 13px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            
+            &::before {
+              content: '';
+              display: inline-block;
+              width: 6px;
+              height: 6px;
+              background: #667eea;
+              border-radius: 50%;
+              margin-right: 6px;
+            }
+          }
+
+          .see {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            
+            .el-icon {
+              transition: transform 0.3s ease;
+            }
+          }
+        }
       }
-
-      p {
-        color: #999;
-        height: 55px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-        overflow: hidden;
-        line-height: 19px;
-        font-size: 12px;
-      }
-
-      .date {
-        color: #bbb;
-        font-size: 12px;
-        margin-bottom: 15px;
-      }
-
-      h4 {
-        margin-bottom: 10px;
-        font-size: 100%;
-        margin-top: 0;
-        font-weight: 400;
-      }
-
-      padding: 30px 15px;
     }
 
     padding: 0 5px;
@@ -715,19 +860,57 @@ onUnmounted(() => {
   .Subtitle {
     color: #888888;
     margin-top: 20px;
-    // margin-bottom: 20px;
     line-height: 22px;
     text-align: center;
     padding: 0 5px;
   }
 
   .title {
-    font-size: 30px;
+    font-size: 36px;
+    font-weight: 700;
     text-align: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #667eea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   padding: 90px 0;
   margin: 0 auto;
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .classification {
+    padding: 60px 15px;
+    
+    .title {
+      font-size: 28px;
+    }
+    
+    .classification-box {
+      .category-card {
+        .card-image-wrapper {
+          height: 160px;
+        }
+        
+        .card-content {
+          padding: 16px;
+          
+          .card-header {
+            .card-title {
+              font-size: 18px;
+            }
+          }
+          
+          .card-description {
+            height: 44px;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
 }
 
 .menu-list {
@@ -739,8 +922,8 @@ onUnmounted(() => {
       margin: auto 0;
       width: 0%;
       height: 3px;
-      transition: width 0.5s;
-      background-color: #1890ff;
+    transition: width 0.5s;
+    background-color: #667eea;
     }
 
     padding: 10px 50px;
@@ -750,7 +933,7 @@ onUnmounted(() => {
     position: relative;
 
     &:hover {
-      color: #1890ff;
+      color: #667eea;
 
       i {
         width: 100%;
@@ -783,7 +966,7 @@ onUnmounted(() => {
 
 .menu_close:hover,
 .menu_open:hover {
-  background: #1890ff;
+  background: #667eea;
 }
 
 .menu_close span,
@@ -961,11 +1144,11 @@ onUnmounted(() => {
 }
 
 .point li a:hover {
-  color: #6bc30d;
+  color: #667eea;
 }
 
 .point li a:hover:before {
-  background-color: #6bc30d;
+  background-color: #667eea;
   right: 15px;
 }
 
@@ -1015,12 +1198,15 @@ onUnmounted(() => {
   font-size: 24px;
   margin-bottom: 20px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 300;
+  letter-spacing: 2px;
 }
 
 .countdown {
   display: flex;
-  gap: 20px;
+  gap: 12px;
   justify-content: center;
+  align-items: center;
 }
 
 .countdown-item {
@@ -1030,26 +1216,36 @@ onUnmounted(() => {
 }
 
 .countdown-number {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
   color: #fff;
   font-size: 36px;
-  font-weight: bold;
+  font-weight: 600;
   width: 80px;
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  letter-spacing: 2px;
+}
+
+.countdown-separator {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 28px;
+  font-weight: 300;
+  margin-bottom: 28px;
 }
 
 .countdown-label {
-  color: #fff;
-  font-size: 16px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* 响应式设计 */
@@ -1063,17 +1259,23 @@ onUnmounted(() => {
   }
   
   .countdown {
-    gap: 15px;
+    gap: 8px;
   }
   
   .countdown-number {
     width: 60px;
     height: 60px;
     font-size: 28px;
+    border-radius: 12px;
+  }
+  
+  .countdown-separator {
+    font-size: 22px;
+    margin-bottom: 24px;
   }
   
   .countdown-label {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 
@@ -1088,17 +1290,23 @@ onUnmounted(() => {
   }
   
   .countdown {
-    gap: 10px;
+    gap: 6px;
   }
   
   .countdown-number {
     width: 50px;
     height: 50px;
     font-size: 24px;
+    border-radius: 10px;
+  }
+  
+  .countdown-separator {
+    font-size: 18px;
+    margin-bottom: 22px;
   }
   
   .countdown-label {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 
