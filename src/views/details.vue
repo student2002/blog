@@ -280,7 +280,8 @@ const generateBubbleStyle = () => {
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   
   // 文章头部
   .article-header {
@@ -399,7 +400,7 @@ const generateBubbleStyle = () => {
         border-bottom: 1px solid #f0f0f0;
         color: #1a1a1a;
         position: relative;
-        
+
         &::before {
           content: '';
           position: absolute;
@@ -407,7 +408,7 @@ const generateBubbleStyle = () => {
           bottom: -1px;
           width: 48px;
           height: 2px;
-          background: linear-gradient(90deg, #1890ff, #52c41a);
+          background: linear-gradient(90deg, #667eea, #764ba2);
         }
       }
       
@@ -444,8 +445,8 @@ const generateBubbleStyle = () => {
       :deep(blockquote) {
         margin: 24px 0;
         padding: 16px 24px;
-        border-left: 4px solid #1890ff;
-        background: linear-gradient(90deg, #e6f7ff, transparent);
+        border-left: 4px solid #667eea;
+        background: linear-gradient(90deg, rgba(102, 126, 234, 0.06), transparent);
         border-radius: 0 8px 8px 0;
         color: #666;
         font-style: italic;
@@ -502,13 +503,13 @@ const generateBubbleStyle = () => {
       }
       
       :deep(a) {
-        color: #1890ff;
+        color: #667eea;
         text-decoration: none;
-        border-bottom: 1px dashed #1890ff;
+        border-bottom: 1px dashed #667eea;
         transition: all 0.3s;
-        
+
         &:hover {
-          color: #40a9ff;
+          color: #764ba2;
           border-bottom-style: solid;
         }
       }
@@ -544,7 +545,7 @@ const generateBubbleStyle = () => {
         .copyright-icon {
           width: 48px;
           height: 48px;
-          background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           border-radius: 12px;
           display: flex;
           align-items: center;
@@ -573,7 +574,7 @@ const generateBubbleStyle = () => {
           }
           
           .url {
-            color: #1890ff;
+            color: #667eea;
             word-break: break-all;
           }
         }
@@ -590,22 +591,22 @@ const generateBubbleStyle = () => {
           margin: 0 0 20px;
           
           .el-icon {
-            color: #1890ff;
+            color: #667eea;
           }
         }
-        
+
         .related-list {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
           gap: 16px;
-          
+
           .related-item {
             background: #fff;
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
-            border: 1px solid #f0f0f0;
+            border: 1px solid rgba(0, 0, 0, 0.04);
             
             &:hover {
               transform: translateY(-4px);
@@ -668,9 +669,9 @@ const generateBubbleStyle = () => {
     z-index: 100;
     
     &:hover {
-      background: #1890ff;
+      background: #667eea;
       color: #fff;
-      box-shadow: 0 6px 20px rgba(24, 144, 255, 0.3);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
     }
   }
 }

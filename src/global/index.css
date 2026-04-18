@@ -291,35 +291,34 @@ html,body{
     box-shadow: 0 0 20px rgba(24, 144, 255, 0.4);
 }
 
-/* 滚动条美化 */
+/* 滚动条美化 - Stripe inspired minimal scrollbar */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #1890ff, #52c41a);
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #40a9ff, #73d13d);
+    background: rgba(0, 0, 0, 0.25);
 }
 
 /* 选中文本样式 */
 ::selection {
-    background: rgba(24, 144, 255, 0.2);
-    color: #1890ff;
+    background: rgba(102, 126, 234, 0.2);
+    color: #5b4fc7;
 }
 
 ::-moz-selection {
-    background: rgba(24, 144, 255, 0.2);
-    color: #1890ff;
+    background: rgba(102, 126, 234, 0.2);
+    color: #5b4fc7;
 }
 
 /* 骨架屏效果 */
@@ -360,7 +359,7 @@ img {
 
 /* 渐变文字 */
 .gradient-text {
-    background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -368,22 +367,22 @@ img {
 
 /* 毛玻璃效果 */
 .glass-effect {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 /* 阴影效果 */
 .shadow-soft {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .shadow-medium {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .shadow-strong {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1), 0 16px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* 响应式隐藏类 */

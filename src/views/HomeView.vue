@@ -24,14 +24,17 @@
             <div class="countdown-number">{{ countdownDays }}</div>
             <div class="countdown-label">天</div>
           </div>
+          <div class="countdown-separator">:</div>
           <div class="countdown-item">
             <div class="countdown-number">{{ countdownHours }}</div>
             <div class="countdown-label">时</div>
           </div>
+          <div class="countdown-separator">:</div>
           <div class="countdown-item">
             <div class="countdown-number">{{ countdownMinutes }}</div>
             <div class="countdown-label">分</div>
           </div>
+          <div class="countdown-separator">:</div>
           <div class="countdown-item">
             <div class="countdown-number">{{ countdownSeconds }}</div>
             <div class="countdown-label">秒</div>
@@ -677,35 +680,37 @@ onUnmounted(() => {
   .classification-box {
     .category-card {
       background-color: #ffffff;
-      border-radius: 16px;
+      border-radius: 20px;
       overflow: hidden;
       margin-bottom: 24px;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
       position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.04);
 
       &:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(102, 126, 234, 0.15), 0 8px 24px rgba(0, 0, 0, 0.08);
 
         .card-image-wrapper {
           img {
-            transform: scale(1.1);
+            transform: scale(1.08);
           }
         }
 
         .card-overlay {
-          background: linear-gradient(135deg, rgba(24, 144, 255, 0.85) 0%, rgba(82, 196, 26, 0.85) 100%);
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%);
         }
 
         .card-icon {
-          transform: translate(-50%, -50%) scale(1.1);
+          transform: translate(-50%, -50%) scale(1.15);
           background: rgba(255, 255, 255, 0.95);
+          box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
         }
 
         .see {
-          color: #1890ff;
+          color: #667eea;
           el-icon {
             transform: translateX(4px);
           }
@@ -721,7 +726,7 @@ onUnmounted(() => {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: all 0.5s ease;
+          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card-overlay {
@@ -730,8 +735,8 @@ onUnmounted(() => {
           left: 0;
           right: 0;
           bottom: 0;
-          background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 100%);
-          transition: all 0.4s ease;
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%);
+          transition: all 0.5s ease;
         }
 
         .card-icon {
@@ -741,17 +746,17 @@ onUnmounted(() => {
           transform: translate(-50%, -50%);
           width: 64px;
           height: 64px;
-          background: rgba(255, 255, 255, 0.9);
+          background: rgba(255, 255, 255, 0.92);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.4s ease;
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
           z-index: 2;
           
           .el-icon {
             font-size: 28px;
-            color: #1890ff;
+            color: #667eea;
           }
         }
       }
@@ -780,7 +785,7 @@ onUnmounted(() => {
               left: 0;
               width: 32px;
               height: 3px;
-              background: linear-gradient(90deg, #1890ff 0%, #52c41a 100%);
+              background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
               border-radius: 2px;
             }
           }
@@ -788,7 +793,7 @@ onUnmounted(() => {
           .card-date {
             font-size: 13px;
             color: #999;
-            background: #f5f5f5;
+            background: #f8f9fa;
             padding: 4px 12px;
             border-radius: 20px;
           }
@@ -811,7 +816,7 @@ onUnmounted(() => {
           justify-content: space-between;
           align-items: center;
           padding-top: 16px;
-          border-top: 1px solid #f0f0f0;
+          border-top: 1px solid #f5f5f5;
 
           .card-count {
             font-size: 13px;
@@ -824,7 +829,7 @@ onUnmounted(() => {
               display: inline-block;
               width: 6px;
               height: 6px;
-              background: #52c41a;
+              background: #667eea;
               border-radius: 50%;
               margin-right: 6px;
             }
@@ -864,7 +869,7 @@ onUnmounted(() => {
     font-size: 36px;
     font-weight: 700;
     text-align: center;
-    background: linear-gradient(135deg, #1a1a1a 0%, #1890ff 100%);
+    background: linear-gradient(135deg, #1a1a1a 0%, #667eea 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -917,8 +922,8 @@ onUnmounted(() => {
       margin: auto 0;
       width: 0%;
       height: 3px;
-      transition: width 0.5s;
-      background-color: #1890ff;
+    transition: width 0.5s;
+    background-color: #667eea;
     }
 
     padding: 10px 50px;
@@ -928,7 +933,7 @@ onUnmounted(() => {
     position: relative;
 
     &:hover {
-      color: #1890ff;
+      color: #667eea;
 
       i {
         width: 100%;
@@ -961,7 +966,7 @@ onUnmounted(() => {
 
 .menu_close:hover,
 .menu_open:hover {
-  background: #1890ff;
+  background: #667eea;
 }
 
 .menu_close span,
@@ -1139,11 +1144,11 @@ onUnmounted(() => {
 }
 
 .point li a:hover {
-  color: #6bc30d;
+  color: #667eea;
 }
 
 .point li a:hover:before {
-  background-color: #6bc30d;
+  background-color: #667eea;
   right: 15px;
 }
 
@@ -1193,12 +1198,15 @@ onUnmounted(() => {
   font-size: 24px;
   margin-bottom: 20px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 300;
+  letter-spacing: 2px;
 }
 
 .countdown {
   display: flex;
-  gap: 20px;
+  gap: 12px;
   justify-content: center;
+  align-items: center;
 }
 
 .countdown-item {
@@ -1208,26 +1216,36 @@ onUnmounted(() => {
 }
 
 .countdown-number {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
   color: #fff;
   font-size: 36px;
-  font-weight: bold;
+  font-weight: 600;
   width: 80px;
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  letter-spacing: 2px;
+}
+
+.countdown-separator {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 28px;
+  font-weight: 300;
+  margin-bottom: 28px;
 }
 
 .countdown-label {
-  color: #fff;
-  font-size: 16px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* 响应式设计 */
@@ -1241,17 +1259,23 @@ onUnmounted(() => {
   }
   
   .countdown {
-    gap: 15px;
+    gap: 8px;
   }
   
   .countdown-number {
     width: 60px;
     height: 60px;
     font-size: 28px;
+    border-radius: 12px;
+  }
+  
+  .countdown-separator {
+    font-size: 22px;
+    margin-bottom: 24px;
   }
   
   .countdown-label {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 
@@ -1266,17 +1290,23 @@ onUnmounted(() => {
   }
   
   .countdown {
-    gap: 10px;
+    gap: 6px;
   }
   
   .countdown-number {
     width: 50px;
     height: 50px;
     font-size: 24px;
+    border-radius: 10px;
+  }
+  
+  .countdown-separator {
+    font-size: 18px;
+    margin-bottom: 22px;
   }
   
   .countdown-label {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 

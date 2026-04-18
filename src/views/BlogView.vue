@@ -143,7 +143,7 @@ const indexPageEvent = (page, index) => {
       .logo-text {
         font-size: 24px;
         font-weight: 700;
-        background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -152,7 +152,7 @@ const indexPageEvent = (page, index) => {
       .logo-dot {
         font-size: 24px;
         font-weight: 700;
-        color: #52c41a;
+        color: #764ba2;
       }
 
       .logo-sub {
@@ -182,7 +182,7 @@ const indexPageEvent = (page, index) => {
           bottom: 0;
           width: 0%;
           height: 3px;
-          background: linear-gradient(90deg, #1890ff 0%, #52c41a 100%);
+          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
           transform: translateX(-50%);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           border-radius: 3px 3px 0 0;
@@ -196,7 +196,7 @@ const indexPageEvent = (page, index) => {
 
         &:hover {
           .nav-text {
-            color: #1890ff;
+            color: #667eea;
           }
           
           i {
@@ -206,7 +206,7 @@ const indexPageEvent = (page, index) => {
 
         &.active {
           .nav-text {
-            color: #1890ff;
+            color: #667eea;
             font-weight: 600;
           }
           
@@ -228,7 +228,7 @@ const indexPageEvent = (page, index) => {
     .logo-mobile {
       font-size: 20px;
       font-weight: 700;
-      background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -244,7 +244,7 @@ const indexPageEvent = (page, index) => {
       transition: all 0.3s;
 
       &:hover {
-        background: #1890ff;
+        background: #667eea;
         color: #fff;
       }
     }
@@ -266,7 +266,7 @@ const indexPageEvent = (page, index) => {
   .drawer-logo {
     font-size: 22px;
     font-weight: 700;
-    background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -292,7 +292,7 @@ const indexPageEvent = (page, index) => {
       left: 0;
       bottom: 0;
       width: 0%;
-      background: linear-gradient(90deg, #1890ff 0%, #52c41a 100%);
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
       height: 3px;
       border-radius: 0 3px 3px 0;
       transition: all 0.3s ease;
@@ -311,28 +311,28 @@ const indexPageEvent = (page, index) => {
     }
 
     &:hover {
-      background: linear-gradient(90deg, #e6f7ff 0%, #f6ffed 100%);
+      background: linear-gradient(90deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.06) 100%);
       
       span {
-        color: #1890ff;
+        color: #667eea;
       }
       
       .arrow-icon {
-        color: #1890ff;
+        color: #667eea;
         transform: translateX(4px);
       }
     }
 
     &.active {
-      background: linear-gradient(90deg, #e6f7ff 0%, #f6ffed 100%);
+      background: linear-gradient(90deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.06) 100%);
       
       span {
-        color: #1890ff;
+        color: #667eea;
         font-weight: 600;
       }
       
       .arrow-icon {
-        color: #1890ff;
+        color: #667eea;
       }
       
       i {

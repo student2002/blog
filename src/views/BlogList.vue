@@ -24,8 +24,8 @@
         </div>
       </div>
       <div class="hero-wave">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f5f5f5"/>
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0 60L60 52C120 44 240 28 360 22C480 16 600 16 720 20C840 24 960 32 1080 36C1200 40 1320 40 1380 40L1440 40V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0Z" fill="#f5f5f5"/>
         </svg>
       </div>
     </div>
@@ -322,7 +322,7 @@ const detailsPageEvent = (id) => {
 // Hero Section
 .hero-section {
   position: relative;
-  height: 320px;
+  height: 280px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   overflow: hidden;
   display: flex;
@@ -346,6 +346,7 @@ const detailsPageEvent = (id) => {
     z-index: 2;
     text-align: center;
     color: #fff;
+    margin-top: -20px;
     
     .hero-title {
       font-size: 42px;
@@ -395,11 +396,12 @@ const detailsPageEvent = (id) => {
     bottom: 0;
     left: 0;
     right: 0;
+    line-height: 0;
     
     svg {
       display: block;
       width: 100%;
-      height: auto;
+      height: 40px;
     }
   }
 }
@@ -411,7 +413,7 @@ const detailsPageEvent = (id) => {
 }
 
 .list-box {
-  padding: 40px 0 60px;
+  padding: 20px 0 60px;
   
   .content {
     padding: 0 15px;
@@ -422,16 +424,17 @@ const detailsPageEvent = (id) => {
 .bloglist {
   .article-item {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
     margin-bottom: 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.04);
     
     &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(102, 126, 234, 0.12), 0 6px 20px rgba(0, 0, 0, 0.08);
       
       .article-image-wrapper {
         img {
@@ -439,12 +442,12 @@ const detailsPageEvent = (id) => {
         }
         
         .image-overlay {
-          background: rgba(0, 0, 0, 0.3);
+          background: rgba(0, 0, 0, 0.25);
         }
       }
       
       .read-more-btn {
-        color: #1890ff;
+        color: #667eea;
         
         .el-icon {
           transform: translateX(4px);
@@ -479,12 +482,13 @@ const detailsPageEvent = (id) => {
         top: 16px;
         left: 16px;
         padding: 6px 14px;
-        background: rgba(24, 144, 255, 0.9);
+        background: rgba(102, 126, 234, 0.9);
         color: #fff;
         font-size: 12px;
         border-radius: 20px;
         z-index: 2;
         backdrop-filter: blur(4px);
+        font-weight: 500;
       }
     }
     
@@ -518,7 +522,7 @@ const detailsPageEvent = (id) => {
         transition: color 0.3s;
         
         &:hover {
-          color: #1890ff;
+          color: #667eea;
         }
       }
       
@@ -554,8 +558,8 @@ const detailsPageEvent = (id) => {
             transition: all 0.3s;
             
             &:hover {
-              background: #e6f7ff;
-              color: #1890ff;
+              background: rgba(102, 126, 234, 0.08);
+              color: #667eea;
             }
           }
         }
@@ -596,7 +600,8 @@ const detailsPageEvent = (id) => {
     text-align: center;
     padding: 80px 20px;
     background: #fff;
-    border-radius: 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
     
     .empty-icon {
       font-size: 64px;
@@ -634,32 +639,34 @@ const detailsPageEvent = (id) => {
 .sidebar {
   .search-card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+
     .search-box {
       ::v-deep(.el-input__wrapper) {
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         border: 1px solid #e8e8e8;
         transition: all 0.3s;
-        
+
         &:hover, &.is-focus {
-          border-color: #1890ff;
-          box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+          border-color: #667eea;
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
         }
       }
     }
   }
-  
+
   .category-card, .tags-card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     
     .card-header {
       margin-bottom: 16px;
@@ -676,7 +683,7 @@ const detailsPageEvent = (id) => {
         margin: 0;
         
         .el-icon {
-          color: #1890ff;
+          color: #667eea;
         }
       }
     }
@@ -694,23 +701,23 @@ const detailsPageEvent = (id) => {
       transition: all 0.3s;
       
       &:hover {
-        background: #f5f7fa;
-        
+        background: rgba(102, 126, 234, 0.04);
+
         .category-name {
-          color: #1890ff;
+          color: #667eea;
         }
       }
-      
+
       &.active {
-        background: linear-gradient(135deg, #e6f7ff 0%, #f0f5ff 100%);
-        
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.04) 100%);
+
         .category-name {
-          color: #1890ff;
+          color: #667eea;
           font-weight: 600;
         }
-        
+
         .category-count {
-          background: #1890ff;
+          background: #667eea;
           color: #fff;
         }
       }
@@ -750,17 +757,19 @@ const detailsPageEvent = (id) => {
     
     .tag-item {
       padding: 6px 14px;
-      background: #f5f5f5;
+      background: #f8f9fa;
       color: #666;
       font-size: 13px;
       border-radius: 20px;
       cursor: pointer;
-      transition: all 0.3s;
-      
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid transparent;
+
       &:hover {
-        background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: #fff;
-        transform: scale(1.05);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
       }
     }
   }
@@ -769,7 +778,7 @@ const detailsPageEvent = (id) => {
 // 响应式设计
 @media (max-width: 768px) {
   .hero-section {
-    height: 240px;
+    height: 220px;
     
     .hero-content {
       .hero-title {

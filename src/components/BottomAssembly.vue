@@ -132,16 +132,16 @@ const currentYear = computed(() => new Date().getFullYear())
         .brand-text {
           font-size: 28px;
           font-weight: 700;
-          background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
-        
+
         .brand-dot {
           font-size: 28px;
           font-weight: 700;
-          color: #52c41a;
+          color: #764ba2;
         }
         
         .brand-sub {
@@ -175,7 +175,7 @@ const currentYear = computed(() => new Date().getFullYear())
           transition: all 0.3s ease;
           
           &:hover {
-            background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
             transform: translateY(-3px);
           }
@@ -200,7 +200,7 @@ const currentYear = computed(() => new Date().getFullYear())
           bottom: 0;
           width: 40px;
           height: 2px;
-          background: linear-gradient(90deg, #1890ff 0%, #52c41a 100%);
+          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
           border-radius: 2px;
         }
       }
@@ -226,7 +226,7 @@ const currentYear = computed(() => new Date().getFullYear())
             }
             
             &:hover {
-              color: #1890ff;
+              color: #667eea;
               transform: translateX(4px);
             }
           }
@@ -248,7 +248,7 @@ const currentYear = computed(() => new Date().getFullYear())
           
           .el-icon {
             font-size: 16px;
-            color: #1890ff;
+            color: #667eea;
           }
         }
       }
@@ -268,11 +268,11 @@ const currentYear = computed(() => new Date().getFullYear())
       
       .powered-by {
         a {
-          color: #1890ff;
+          color: #667eea;
           transition: color 0.3s;
-          
+
           &:hover {
-            color: #40a9ff;
+            color: #764ba2;
           }
         }
       }
