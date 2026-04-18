@@ -66,18 +66,33 @@
         <p class="Subtitle">只要朝着一个方向努力一切都会变得得心应手</p>
       </div>
       <div class="classification-box adapt_box">
-        <el-row :gutter="20">
+        <el-row :gutter="24">
           <el-col :xs="24" :sm="24 / 3" :md="24 / 3" :lg="24 / 3" :xl="24 / 3" v-for="(category, index) in categories" :key="index">
-            <div class="fadeInUp">
-              <img :src="getCategoryImage(category.name)"
-                alt="" style="width: 100%" />
-              <div class="news-content">
-                <h4>{{ category.name }}专栏</h4>
-                <div class="date">{{ category.date }}</div>
-                <p>
+            <div class="category-card fadeInUp" @click="goToCategory(category.name)">
+              <div class="card-image-wrapper">
+                <img :src="getCategoryImage(category.name)" :alt="category.name" />
+                <div class="card-overlay"></div>
+                <div class="card-icon">
+                  <el-icon v-if="category.name === '生活'"><Coffee /></el-icon>
+                  <el-icon v-else-if="category.name === '技术'"><Cpu /></el-icon>
+                  <el-icon v-else-if="category.name === '杂谈'"><ChatDotRound /></el-icon>
+                </div>
+              </div>
+              <div class="card-content">
+                <div class="card-header">
+                  <h4 class="card-title">{{ category.name }}专栏</h4>
+                  <span class="card-date">{{ category.date }}</span>
+                </div>
+                <p class="card-description">
                   {{ category.description }}
                 </p>
-                <span class="see" @click="menuEvent('/BlogList')">更多阅读</span>
+                <div class="card-footer">
+                  <span class="card-count">{{ getCategoryArticleCount(category.name) }} 篇文章</span>
+                  <span class="see">
+                    <span>更多阅读</span>
+                    <el-icon><ArrowRight /></el-icon>
+                  </span>
+                </div>
               </div>
             </div>
           </el-col>
@@ -128,6 +143,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import common from '@/utils/common'
 import router from '@/Composition/router'
+import { Coffee, Cpu, ChatDotRound, ArrowRight } from '@element-plus/icons-vue'
+import { getAllArticles } from '@/data/articles.js'
 
 // 导入资源
 const homeBannerImage = require('../assets/images/home-banner.jpg');
@@ -216,6 +233,17 @@ const getCategoryImage = (categoryName) => {
     default:
       return homeBannerImage;
   }
+};
+
+// 获取分类下的文章数量
+const getCategoryArticleCount = (categoryName) => {
+  const articles = getAllArticles();
+  return articles.filter(article => article.category === categoryName).length;
+};
+
+// 跳转到分类页面
+const goToCategory = (categoryName) => {
+  router.get().push('/BlogList?category=' + encodeURIComponent(categoryName));
 };
 
 const getViewHeight = common.getViewPortHeight();
@@ -641,70 +669,182 @@ onUnmounted(() => {
 }
 
 .classification {
-
-
   .fadeInDown {
     -webkit-animation-name: fadeInDown;
     animation-name: fadeInDown;
   }
 
-
   .classification-box {
-    .fadeInUp {
+    .category-card {
+      background-color: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      position: relative;
+
       &:hover {
-        img {
-          transform: scale(1.2);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+        .card-image-wrapper {
+          img {
+            transform: scale(1.1);
+          }
+        }
+
+        .card-overlay {
+          background: linear-gradient(135deg, rgba(24, 144, 255, 0.85) 0%, rgba(82, 196, 26, 0.85) 100%);
+        }
+
+        .card-icon {
+          transform: translate(-50%, -50%) scale(1.1);
+          background: rgba(255, 255, 255, 0.95);
+        }
+
+        .see {
+          color: #1890ff;
+          el-icon {
+            transform: translateX(4px);
+          }
         }
       }
 
-      img {
-        transition: all 0.4s ease;
-        height: 244px;
+      .card-image-wrapper {
+        position: relative;
+        height: 200px;
         overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: all 0.5s ease;
+        }
+
+        .card-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 100%);
+          transition: all 0.4s ease;
+        }
+
+        .card-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 64px;
+          height: 64px;
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.4s ease;
+          z-index: 2;
+          
+          .el-icon {
+            font-size: 28px;
+            color: #1890ff;
+          }
+        }
       }
 
-      background-color: #ffffff;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
+      .card-content {
+        padding: 24px;
+        position: relative;
 
-    .news-content {
-      .see {
-        margin-top: 15px;
-        padding: 0;
-        background: 0 0;
-        border: none;
-        color: #1890ff;
-        font-size: 14px;
-        cursor: pointer;
+        .card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+
+          .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+            position: relative;
+            
+            &::after {
+              content: '';
+              position: absolute;
+              bottom: -4px;
+              left: 0;
+              width: 32px;
+              height: 3px;
+              background: linear-gradient(90deg, #1890ff 0%, #52c41a 100%);
+              border-radius: 2px;
+            }
+          }
+
+          .card-date {
+            font-size: 13px;
+            color: #999;
+            background: #f5f5f5;
+            padding: 4px 12px;
+            border-radius: 20px;
+          }
+        }
+
+        .card-description {
+          color: #666;
+          font-size: 14px;
+          line-height: 1.8;
+          height: 50px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+          margin-bottom: 16px;
+        }
+
+        .card-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 16px;
+          border-top: 1px solid #f0f0f0;
+
+          .card-count {
+            font-size: 13px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            
+            &::before {
+              content: '';
+              display: inline-block;
+              width: 6px;
+              height: 6px;
+              background: #52c41a;
+              border-radius: 50%;
+              margin-right: 6px;
+            }
+          }
+
+          .see {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            
+            .el-icon {
+              transition: transform 0.3s ease;
+            }
+          }
+        }
       }
-
-      p {
-        color: #999;
-        height: 55px;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-        overflow: hidden;
-        line-height: 19px;
-        font-size: 12px;
-      }
-
-      .date {
-        color: #bbb;
-        font-size: 12px;
-        margin-bottom: 15px;
-      }
-
-      h4 {
-        margin-bottom: 10px;
-        font-size: 100%;
-        margin-top: 0;
-        font-weight: 400;
-      }
-
-      padding: 30px 15px;
     }
 
     padding: 0 5px;
@@ -715,19 +855,57 @@ onUnmounted(() => {
   .Subtitle {
     color: #888888;
     margin-top: 20px;
-    // margin-bottom: 20px;
     line-height: 22px;
     text-align: center;
     padding: 0 5px;
   }
 
   .title {
-    font-size: 30px;
+    font-size: 36px;
+    font-weight: 700;
     text-align: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #1890ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   padding: 90px 0;
   margin: 0 auto;
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .classification {
+    padding: 60px 15px;
+    
+    .title {
+      font-size: 28px;
+    }
+    
+    .classification-box {
+      .category-card {
+        .card-image-wrapper {
+          height: 160px;
+        }
+        
+        .card-content {
+          padding: 16px;
+          
+          .card-header {
+            .card-title {
+              font-size: 18px;
+            }
+          }
+          
+          .card-description {
+            height: 44px;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
 }
 
 .menu-list {

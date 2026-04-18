@@ -109,3 +109,298 @@ html,body{
     width:100%;
     overflow-x: hidden;
 }
+
+/* 全局动画定义 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(24, 144, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(24, 144, 255, 0.8);
+    }
+}
+
+/* 动画类 */
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.fade-in-down {
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.fade-in-left {
+    animation: fadeInLeft 0.6s ease-out;
+}
+
+.fade-in-right {
+    animation: fadeInRight 0.6s ease-out;
+}
+
+.scale-in {
+    animation: scaleIn 0.5s ease-out;
+}
+
+/* 延迟动画 */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* 过渡效果 */
+.transition-all {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-fast {
+    transition: all 0.15s ease;
+}
+
+.transition-slow {
+    transition: all 0.5s ease;
+}
+
+/* 悬停效果 */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.hover-glow {
+    transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 20px rgba(24, 144, 255, 0.4);
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #1890ff, #52c41a);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #40a9ff, #73d13d);
+}
+
+/* 选中文本样式 */
+::selection {
+    background: rgba(24, 144, 255, 0.2);
+    color: #1890ff;
+}
+
+::-moz-selection {
+    background: rgba(24, 144, 255, 0.2);
+    color: #1890ff;
+}
+
+/* 骨架屏效果 */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* 全局链接样式 */
+a {
+    color: #1890ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #40a9ff;
+}
+
+/* 全局按钮基础样式 */
+button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 图片默认样式 */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 最大宽度容器 */
+.maxWidthView {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 渐变文字 */
+.gradient-text {
+    background: linear-gradient(135deg, #1890ff 0%, #52c41a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 毛玻璃效果 */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* 阴影效果 */
+.shadow-soft {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-medium {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-strong {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* 响应式隐藏类 */
+@media (max-width: 768px) {
+    .hidden-mobile {
+        display: none !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hidden-tablet {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    .hidden-desktop {
+        display: none !important;
+    }
+}
