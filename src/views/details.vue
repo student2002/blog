@@ -136,12 +136,23 @@ const renderedContent = computed(() => {
   if (!article.value || !article.value.content) {
     return ''
   }
-  
-  if (/<[^>]+>/.test(article.value.content)) {
-    return article.value.content
+
+  const content = article.value.content
+
+  // 优先检测 Markdown 特征（标题、代码块、列表、粗体等）
+  // 避免包含 XML/Maven 代码块的内容被误判为 HTML
+  const hasMarkdown = /(^|\n)#{1,6}\s|^```|^\s*[-*+]\s|^\s*\d+\.\s|\*\*.*?\*\*|__.*?__/.test(content)
+
+  if (hasMarkdown) {
+    return md.render(content)
   }
-  
-  return md.render(article.value.content)
+
+  // 纯 HTML 内容直接返回
+  if (/<[^>]+>/.test(content)) {
+    return content
+  }
+
+  return md.render(content)
 })
 
 // 加载文章数据
