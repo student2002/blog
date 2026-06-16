@@ -1,5 +1,12 @@
 
 
+/* 字体变量 */
+:root {
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', Consolas, Monaco, monospace;
+}
+
 /*每个页面公共css */
 .hide{
     display: none;
@@ -108,6 +115,9 @@ html,body,ul,li,h5,h4,h1{
 html,body{
     width:100%;
     overflow-x: hidden;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* 全局动画定义 */

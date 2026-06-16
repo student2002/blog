@@ -1,10 +1,10 @@
 <template>
   <div class="article-detail-page">
-    <!-- 背景装饰 -->
+    <!-- 背景装饰 - 微妙的渐变光斑 -->
     <div class="background-decoration">
-      <div class="bubble-container">
-        <div v-for="i in bubbleCount" :key="i" class="bubble" :style="bubbleStyles[i-1]"></div>
-      </div>
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+      <div class="glow glow-3"></div>
     </div>
     
     <div class="maxWidthView inner">
@@ -41,7 +41,7 @@
               </div>
               <div class="meta-item">
                 <el-icon><View /></el-icon>
-                <span>{{ article.views || Math.floor(Math.random() * 1000) + 100 }}</span>
+                <span>{{ article.views || stableViewCount }}</span>
               </div>
             </div>
             <div class="article-tags" v-if="article.tags && article.tags.length">
@@ -126,6 +126,18 @@ const currentUrl = computed(() => {
   return window.location.href
 })
 
+// 基于文章ID生成稳定的浏览量（避免每次刷新随机变化）
+const stableViewCount = computed(() => {
+  if (!article.value || !article.value.id) return 0
+  const id = article.value.id
+  let hash = 0
+  for (let i = 0; i < id.length; i++) {
+    hash = ((hash << 5) - hash) + id.charCodeAt(i)
+    hash |= 0
+  }
+  return Math.abs(hash % 900) + 100
+})
+
 // 计算属性获取文章ID
 const currentArticleId = computed(() => {
   return route.query.id
@@ -199,36 +211,9 @@ watch(() => route.query.id, () => {
 onMounted(() => {
   loadArticle()
 })
-
-// 气泡动画
-const bubbleCount = ref(20)
-const bubbleStyles = ref([])
-
-onMounted(() => {
-  for (let i = 0; i < bubbleCount.value; i++) {
-    bubbleStyles.value.push(generateBubbleStyle())
-  }
-})
-
-const generateBubbleStyle = () => {
-  const size = Math.random() * 60 + 20
-  const duration = Math.random() * 8 + 4
-  const delay = Math.random() * 5
-  const x = Math.random() * 100
-
-  return {
-    width: `${size}px`,
-    height: `${size}px`,
-    left: `${x}%`,
-    animationDuration: `${duration}s`,
-    animationDelay: `${delay}s`,
-  }
-}
 </script>
 
 <style lang="scss" scoped>
-@import '@/global/bubbles.css';
-
 .article-detail-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
@@ -243,6 +228,50 @@ const generateBubbleStyle = () => {
     bottom: 0;
     pointer-events: none;
     z-index: 0;
+    overflow: hidden;
+
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+    }
+
+    .glow-1 {
+      width: 400px;
+      height: 400px;
+      background: #667eea;
+      top: -100px;
+      right: -100px;
+      animation: glowFloat 8s ease-in-out infinite;
+    }
+
+    .glow-2 {
+      width: 300px;
+      height: 300px;
+      background: #764ba2;
+      bottom: 20%;
+      left: -80px;
+      animation: glowFloat 10s ease-in-out infinite reverse;
+    }
+
+    .glow-3 {
+      width: 250px;
+      height: 250px;
+      background: #667eea;
+      bottom: -50px;
+      right: 20%;
+      animation: glowFloat 12s ease-in-out infinite 2s;
+    }
+  }
+}
+
+@keyframes glowFloat {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(20px, -20px);
   }
 }
 
@@ -342,6 +371,7 @@ const generateBubbleStyle = () => {
       }
       
       .article-title {
+        font-family: 'Playfair Display', 'Noto Sans SC', serif;
         font-size: 32px;
         font-weight: 700;
         line-height: 1.4;
@@ -389,6 +419,7 @@ const generateBubbleStyle = () => {
     padding: 40px;
     
     .content-wrapper {
+      font-family: 'Noto Sans SC', sans-serif;
       font-size: 16px;
       line-height: 1.8;
       color: #333;
@@ -467,7 +498,7 @@ const generateBubbleStyle = () => {
         padding: 3px 8px;
         background: #f5f5f5;
         border-radius: 4px;
-        font-family: 'Fira Code', Consolas, Monaco, monospace;
+        font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
         font-size: 14px;
         color: #e83e8c;
       }
@@ -664,25 +695,30 @@ const generateBubbleStyle = () => {
   // 返回按钮
   .back-to-list {
     position: fixed;
-    top: 80px;
+    top: 90px;
     left: 20px;
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 10px 20px;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border-radius: 25px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     cursor: pointer;
+    font-family: 'Noto Sans SC', sans-serif;
     font-size: 14px;
     color: #666;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
+    border: 1px solid rgba(0, 0, 0, 0.04);
     
     &:hover {
-      background: #667eea;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+      border-color: transparent;
+      transform: translateX(-4px);
     }
   }
 }

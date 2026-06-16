@@ -36,7 +36,7 @@
           <el-col :xs="24" :sm="16" :md="16" :lg="17" :xl="17">
             <div class="bloglist">
               <transition-group name="article-list" tag="div">
-                <div class="article-item" v-for="article in articles" :key="article.id">
+                <div class="article-item" v-for="(article, index) in articles" :key="article.id" :style="{ animationDelay: `${index * 0.1}s` }">
                   <div class="article-image-wrapper">
                     <img :src="article.image" :alt="article.title">
                     <div class="image-overlay"></div>
@@ -349,6 +349,7 @@ const detailsPageEvent = (id) => {
     margin-top: -20px;
     
     .hero-title {
+      font-family: 'Playfair Display', 'Noto Sans SC', serif;
       font-size: 42px;
       font-weight: 700;
       margin-bottom: 12px;
@@ -356,6 +357,7 @@ const detailsPageEvent = (id) => {
     }
     
     .hero-subtitle {
+      font-family: 'Noto Sans SC', sans-serif;
       font-size: 18px;
       opacity: 0.9;
       margin-bottom: 30px;
@@ -431,6 +433,7 @@ const detailsPageEvent = (id) => {
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     border: 1px solid rgba(0, 0, 0, 0.04);
+    animation: articleFadeIn 0.6s ease-out both;
     
     &:hover {
       transform: translateY(-6px);
@@ -514,6 +517,7 @@ const detailsPageEvent = (id) => {
       }
       
       .article-title {
+        font-family: 'Noto Sans SC', sans-serif;
         font-size: 20px;
         font-weight: 600;
         color: #1a1a1a;
@@ -527,6 +531,7 @@ const detailsPageEvent = (id) => {
       }
       
       .article-summary {
+        font-family: 'Noto Sans SC', sans-serif;
         font-size: 14px;
         line-height: 1.8;
         color: #666;
@@ -635,6 +640,17 @@ const detailsPageEvent = (id) => {
   transform: translateY(20px);
 }
 
+@keyframes articleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // Sidebar
 .sidebar {
   .search-card {
@@ -677,6 +693,7 @@ const detailsPageEvent = (id) => {
         display: flex;
         align-items: center;
         gap: 8px;
+        font-family: 'Noto Sans SC', sans-serif;
         font-size: 16px;
         font-weight: 600;
         color: #1a1a1a;

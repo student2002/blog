@@ -5,17 +5,17 @@
       <source :src="bgVideoSource" type="video/mp4">
     </video>
     
-    <!-- 半透明遮罩层，降低视频亮度 -->
+    <!-- 渐变遮罩层，降低视频亮度同时保留视频可见性 -->
     <div class="video-overlay"></div>
     
-    <!-- 烟花特效层 -->
-    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+    <!-- 烟花特效层（仅春节期间显示） -->
+    <canvas v-if="isSpringFestival" id="fireworksCanvas" class="fireworks-canvas"></canvas>
     
     <!-- 内容层 -->
     <div class="content-overlay">
       <div class="callout-title">
-        <h1>muffin-Blog</h1>
-        <p>只要朝着一个方向努力，一切都会变得得心应手</p>
+        <h1 class="hero-logo">Muffin<span class="hero-dot">.</span>Blog</h1>
+        <p class="hero-slogan">只要朝着一个方向努力，一切都会变得得心应手</p>
       </div>
       <div class="countdown-container">
         <h2 class="countdown-title">距离{{ nextYear }}年还有</h2>
@@ -112,8 +112,10 @@
                   <div class="links fadeInLeft " :style="{
                     'visibility': page2AnimationType ? 'visible' : 'hidden',
                     'animationName': page2AnimationType ? 'fadeInLeft' : 'none',
-                  }" :class="{ 'animated': page2AnimationType }" @click="openLink('https://github.com/student2002/blog')">关于</div>
-                  <div class="after"></div>
+                  }" :class="{ 'animated': page2AnimationType }" @click="openLink('https://github.com/student2002/blog')">
+                    <el-icon class="link-icon"><User /></el-icon>
+                    <span>关于作者</span>
+                  </div>
                 </div>
               </el-col>
               <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
@@ -121,7 +123,10 @@
                   <div class="links fadeInRight" :style="{
                     'visibility': page2AnimationType ? 'visible' : 'hidden',
                     'animationName': page2AnimationType ? 'fadeInRight' : 'none',
-                  }" :class="{ 'animated': page2AnimationType }">+友情链接</div>
+                  }" :class="{ 'animated': page2AnimationType }">
+                    <el-icon class="link-icon"><Link /></el-icon>
+                    <span>友情链接</span>
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -130,14 +135,21 @@
       </el-row>
     </div>
     <div class="personal">
-      <div class="title fadeInLeft" :style="{
-        'visibility': page3AnimationType ? 'visible' : 'hidden',
-        'animationName': page3AnimationType ? 'fadeInLeft' : 'none',
-      }" :class="{ 'animated': page3AnimationType }">muffin个人博客</div>
-      <div class="Subtitle fadeInRight" :style="{
-        'visibility': page3AnimationType ? 'visible' : 'hidden',
-        'animationName': page3AnimationType ? 'fadeInRight' : 'none',
-      }" :class="{ 'animated': page3AnimationType }">一天很短，开心了就笑，不开心了就过一会儿再笑。</div>
+      <div class="personal-inner">
+        <div class="personal-avatar">
+          <span class="avatar-text">M</span>
+        </div>
+        <div class="personal-info">
+          <div class="title fadeInLeft" :style="{
+            'visibility': page3AnimationType ? 'visible' : 'hidden',
+            'animationName': page3AnimationType ? 'fadeInLeft' : 'none',
+          }" :class="{ 'animated': page3AnimationType }">muffin个人博客</div>
+          <div class="Subtitle fadeInRight" :style="{
+            'visibility': page3AnimationType ? 'visible' : 'hidden',
+            'animationName': page3AnimationType ? 'fadeInRight' : 'none',
+          }" :class="{ 'animated': page3AnimationType }">一天很短，开心了就笑，不开心了就过一会儿再笑。</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -146,7 +158,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import common from '@/utils/common'
 import router from '@/Composition/router'
-import { Coffee, Cpu, ChatDotRound, ArrowRight } from '@element-plus/icons-vue'
+import { Coffee, Cpu, ChatDotRound, ArrowRight, User, Link } from '@element-plus/icons-vue'
 import { getAllArticles } from '@/data/articles.js'
 
 // 导入资源
@@ -159,6 +171,37 @@ const codeImage = require('../assets/images/code.png');
 const imagineImage = require('../assets/images/Imagine.jpg');
 // 尝试使用require导入视频文件
 const bgVideoSource = require('@/assets/videos/bj.webm');
+
+// 判断当前是否在春节期间（除夕前3天到正月十五）
+const isSpringFestival = ref(false);
+
+// 近年春节日期（农历正月初一对应的公历日期）
+const springFestivalDates = [
+  { year: 2025, month: 1, day: 29 },  // 2025年春节
+  { year: 2026, month: 2, day: 17 },  // 2026年春节
+  { year: 2027, month: 2, day: 6 },   // 2027年春节
+  { year: 2028, month: 1, day: 26 },  // 2028年春节
+  { year: 2029, month: 2, day: 13 },  // 2029年春节
+  { year: 2030, month: 2, day: 3 },   // 2030年春节
+];
+
+const checkSpringFestival = () => {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const springFestival = springFestivalDates.find(d => d.year === currentYear);
+  if (!springFestival) return false;
+
+  const festivalDate = new Date(springFestival.year, springFestival.month - 1, springFestival.day);
+  // 除夕前3天 到 正月十五（共19天）
+  const startDate = new Date(festivalDate);
+  startDate.setDate(startDate.getDate() - 3);
+  const endDate = new Date(festivalDate);
+  endDate.setDate(endDate.getDate() + 15);
+
+  return now >= startDate && now <= endDate;
+};
+
+isSpringFestival.value = checkSpringFestival();
 
 const mark = ref(false);
 
@@ -271,13 +314,15 @@ window.onscroll = function (e) {
 };
 
 const ArrowDownBoldEvent = () => {
-  let thisScrollTop = document.documentElement.scrollTop;
-  setTimeout(() => {
-    if (thisScrollTop < getViewHeight) {
-      document.documentElement.scrollTop = thisScrollTop + 15
-      ArrowDownBoldEvent()
+  const targetScroll = getViewHeight;
+  const scrollStep = () => {
+    const currentScroll = document.documentElement.scrollTop;
+    if (currentScroll < targetScroll) {
+      document.documentElement.scrollTop = currentScroll + 15;
+      requestAnimationFrame(scrollStep);
     }
-  });
+  };
+  requestAnimationFrame(scrollStep);
 };
 
 // 烟花特效相关代码
@@ -530,11 +575,13 @@ const initFireworks = () => {
   loop();
 };
 
-// 组件挂载时启动倒计时和烟花特效
+// 组件挂载时启动倒计时和烟花特效（仅春节期间）
 onMounted(() => {
   calculateCountdown();
   countdownInterval = setInterval(calculateCountdown, 1000);
-  initFireworks();
+  if (isSpringFestival.value) {
+    initFireworks();
+  }
 });
 
 // 组件卸载时清除倒计时和烟花特效
@@ -561,14 +608,19 @@ onUnmounted(() => {
   pointer-events: none;
 }
 
-// 视频遮罩层样式，用于降低视频亮度
+// 视频遮罩层 - 渐变遮罩保留视频可见性
 .video-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.55) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
   z-index: 4;
   pointer-events: none;
 }
@@ -581,7 +633,13 @@ onUnmounted(() => {
   margin: 0 auto;
   font-size: 40px;
   cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
   animation: bounce-up 2s 0s alternate infinite;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #fff;
+  }
 }
 
 
@@ -607,21 +665,61 @@ onUnmounted(() => {
   animation-fill-mode: both;
 }
 
+// 个人区域
 .personal {
+  padding: 60px 0;
+  background: #f5f5f5;
+
+  .personal-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .personal-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+
+    .avatar-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+    }
+  }
+
+  .personal-info {
+    text-align: center;
+  }
+
   .Subtitle {
     text-align: center;
-    font-size: 14px;
+    font-size: 15px;
+    color: #888;
+    line-height: 1.8;
   }
 
   .title {
-    font-size: 30px;
-    margin-bottom: 20px;
+    font-family: 'Playfair Display', 'Noto Sans SC', serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
     text-align: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #667eea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-
-  padding: 50px 0;
 }
 
+// 关于/友情链接区域
 .about {
   .about-box {
     .links-box {
@@ -639,18 +737,34 @@ onUnmounted(() => {
       }
 
       .links {
-        &:hover {
-          border-color: #fff;
-          color: #fff;
-        }
-
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
         width: 200px;
-        height: 46px;
-        border: 1px solid #b4b4b4;
+        height: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
         color: #ffffff;
         text-align: center;
-        line-height: 46px;
+        line-height: 50px;
         cursor: pointer;
+        border-radius: 25px;
+        backdrop-filter: blur(8px);
+        background: rgba(255, 255, 255, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 15px;
+        font-weight: 500;
+
+        .link-icon {
+          font-size: 18px;
+        }
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.18);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
       }
     }
 
@@ -658,7 +772,6 @@ onUnmounted(() => {
     margin: 0 auto;
   }
 
-  // background-image: url(https://images.unsplash.com/photo-1551841462-31a28cf2c601?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80);
   background-image: url(../assets/images/home-banner.jpg);
   background-position: center;
   background-attachment: fixed;
@@ -669,8 +782,26 @@ onUnmounted(() => {
   width: 100%;
   position: relative;
   padding: 100px 0;
+
+  // 深色遮罩增强文字可读性
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.75) 0%, rgba(22, 33, 62, 0.7) 100%);
+    z-index: 0;
+  }
+
+  .about-box {
+    position: relative;
+    z-index: 1;
+  }
 }
 
+// 分类区域
 .classification {
   .fadeInDown {
     -webkit-animation-name: fadeInDown;
@@ -772,6 +903,7 @@ onUnmounted(() => {
           margin-bottom: 12px;
 
           .card-title {
+            font-family: 'Noto Sans SC', sans-serif;
             font-size: 20px;
             font-weight: 600;
             color: #1a1a1a;
@@ -800,6 +932,7 @@ onUnmounted(() => {
         }
 
         .card-description {
+          font-family: 'Noto Sans SC', sans-serif;
           color: #666;
           font-size: 14px;
           line-height: 1.8;
@@ -858,6 +991,7 @@ onUnmounted(() => {
   }
 
   .Subtitle {
+    font-family: 'Noto Sans SC', sans-serif;
     color: #888888;
     margin-top: 20px;
     line-height: 22px;
@@ -866,6 +1000,7 @@ onUnmounted(() => {
   }
 
   .title {
+    font-family: 'Playfair Display', 'Noto Sans SC', serif;
     font-size: 36px;
     font-weight: 700;
     text-align: center;
@@ -911,6 +1046,23 @@ onUnmounted(() => {
       }
     }
   }
+
+  .personal {
+    padding: 40px 15px;
+
+    .personal-avatar {
+      width: 64px;
+      height: 64px;
+
+      .avatar-text {
+        font-size: 28px;
+      }
+    }
+
+    .title {
+      font-size: 24px;
+    }
+  }
 }
 
 .menu-list {
@@ -945,7 +1097,6 @@ onUnmounted(() => {
   right: 0;
   top: 200px;
   z-index: 100;
-  // width: 100px;
   cursor: pointer;
 }
 
@@ -1194,6 +1345,7 @@ onUnmounted(() => {
 }
 
 .countdown-title {
+  font-family: 'Noto Sans SC', sans-serif;
   color: #fff;
   font-size: 24px;
   margin-bottom: 20px;
@@ -1216,6 +1368,7 @@ onUnmounted(() => {
 }
 
 .countdown-number {
+  font-family: 'JetBrains Mono', monospace;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(12px);
   border-radius: 14px;
@@ -1241,6 +1394,7 @@ onUnmounted(() => {
 }
 
 .countdown-label {
+  font-family: 'Noto Sans SC', sans-serif;
   color: rgba(255, 255, 255, 0.7);
   font-size: 13px;
   font-weight: 400;
@@ -1361,14 +1515,14 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 确保视频覆盖整个容器 */
-  z-index: 1; /* 设置为最底层 */
+  object-fit: cover;
+  z-index: 1;
 }
 
 /* 内容覆盖层样式 */
 .content-overlay {
   position: relative;
-  z-index: 10; /* 确保内容在视频之上 */
+  z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1377,7 +1531,38 @@ onUnmounted(() => {
   width: 100%;
 }
 
+// Hero Logo 样式
+.hero-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  .hero-dot {
+    color: #667eea;
+  }
+}
+
+.hero-slogan {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 @media screen and (max-width: 768px) {
+  .hero-logo {
+    font-size: 42px;
+  }
+
+  .hero-slogan {
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
 
   .navgation:before,
   .navgation_open:before,

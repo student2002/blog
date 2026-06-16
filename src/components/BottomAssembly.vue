@@ -130,6 +130,7 @@ const currentYear = computed(() => new Date().getFullYear())
         margin-bottom: 16px;
         
         .brand-text {
+          font-family: 'Playfair Display', serif;
           font-size: 28px;
           font-weight: 700;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -139,6 +140,7 @@ const currentYear = computed(() => new Date().getFullYear())
         }
 
         .brand-dot {
+          font-family: 'Playfair Display', serif;
           font-size: 28px;
           font-weight: 700;
           color: #764ba2;
@@ -153,6 +155,7 @@ const currentYear = computed(() => new Date().getFullYear())
       }
       
       .footer-desc {
+        font-family: 'Noto Sans SC', sans-serif;
         font-size: 14px;
         color: rgba(255, 255, 255, 0.6);
         line-height: 1.8;
@@ -187,6 +190,7 @@ const currentYear = computed(() => new Date().getFullYear())
       }
       
       .footer-title {
+        font-family: 'Noto Sans SC', sans-serif;
         font-size: 16px;
         font-weight: 600;
         margin-bottom: 20px;

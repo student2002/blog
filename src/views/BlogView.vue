@@ -1,6 +1,6 @@
 <template>
   <div class="navigation-wrapper">
-    <div class="Navigation">
+    <div class="Navigation" :class="{ 'nav-scrolled': isScrolled }">
       <div class="Navigation-box maxWidthView flex hidden-xs-only">
         <div class="logo-container" @click="indexPageEvent('/', 0)">
           <span class="logo-text">Muffin</span>
@@ -71,11 +71,12 @@
 <script setup>
 import router from '@/Composition/router'
 import common from '@/utils/common'
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { ArrowRight } from '@element-plus/icons-vue'
 
 const activeIndex = ref();
 const drawer = ref(false)
+const isScrolled = ref(false)
 
 const menu = [
   {
@@ -103,6 +104,19 @@ const indexPageEvent = (page, index) => {
   drawer.value = false
   router.get().push(page)
 }
+
+// 滚动监听 - 导航栏透明度变化
+const handleScroll = () => {
+  isScrolled.value = window.pageYOffset > 20
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -112,16 +126,22 @@ const indexPageEvent = (page, index) => {
 
 .Navigation {
   height: 70px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
   z-index: 99;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.nav-scrolled {
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  }
 
   .Navigation-box {
     display: flex;
@@ -141,6 +161,7 @@ const indexPageEvent = (page, index) => {
       }
 
       .logo-text {
+        font-family: 'Playfair Display', serif;
         font-size: 24px;
         font-weight: 700;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -150,12 +171,14 @@ const indexPageEvent = (page, index) => {
       }
 
       .logo-dot {
+        font-family: 'Playfair Display', serif;
         font-size: 24px;
         font-weight: 700;
         color: #764ba2;
       }
 
       .logo-sub {
+        font-family: 'Noto Sans SC', sans-serif;
         font-size: 16px;
         font-weight: 500;
         color: #666;
@@ -165,6 +188,7 @@ const indexPageEvent = (page, index) => {
 
     .nav {
       height: 100%;
+      font-family: 'Noto Sans SC', sans-serif;
       font-size: 15px;
 
       li {
@@ -226,6 +250,7 @@ const indexPageEvent = (page, index) => {
     justify-content: space-between;
 
     .logo-mobile {
+      font-family: 'Playfair Display', serif;
       font-size: 20px;
       font-weight: 700;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -264,6 +289,7 @@ const indexPageEvent = (page, index) => {
   border-bottom: 1px solid #f0f0f0;
   
   .drawer-logo {
+    font-family: 'Playfair Display', serif;
     font-size: 22px;
     font-weight: 700;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
