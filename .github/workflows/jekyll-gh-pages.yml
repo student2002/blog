@@ -17,3 +17,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          # 每次部署都把自定义域名写回 gh-pages 分支，否则 force push 会把 CNAME 冲掉，
+          # zhenfeng.chat 就会变成 404（github.io/blog 仍然正常）
+          cname: zhenfeng.chat
